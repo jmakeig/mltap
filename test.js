@@ -61,13 +61,16 @@ function newInstance(Type, ...args) {
   if('object' === typeof constructed) {
      instance = constructed;
   }
-  Object
-    .getOwnPropertyNames(Type.prototype)
-    .forEach(prop => instance[prop] = Type.prototype[prop]);
+  // TODO: Shouldn't be necessary
+  // Object
+  //   .getOwnPropertyNames(Type.prototype)
+  //   .forEach(prop => instance[prop] = Type.prototype[prop]);
   return instance;
 } 
 
-// Prototype functions don't cross invoke boundaries
+/**
+ * Singleton
+ */
 let harness = {
   tests: new Array(),
   results: new Array(),
@@ -77,16 +80,18 @@ let harness = {
   run() {
     for(let test of this.tests) {
       try {
-        test.run();
+        this.results.push({
+          name: test.name,
+          results: test.run(),
+        });
       } catch(error) {
         throw error;
       }
     }
+  },
+  *[Symbol.iterator]() {
+     yield* this.tests[Symbol.iterator](); 
   }
-
-  // *[Symbol.iterator]() {
-  //   yield* this.tests[Symbol.iterator](); 
-  // }
 }
 
 function Test(name, impl) {
@@ -103,30 +108,43 @@ Test.prototype = {
       // from this library, not exceptions thrown from tested code
       throw error;
     } finally{
+      assert.complete();
       return assert.report();
     }
   }
 }
 
 function Assert() {
-  this.plan = null; // Is this Test or Assert state?
+  this.planned = null; // Is this Test or Assert state?
+  //this.hasPlan = false; // TODO: Turn into a getter
   this.isEnded = false;
 
   this.outcomes = new Array();
-  }
+}
 Assert.prototype = {
   plan(count) {
-    if('number' !== typeof count) {
-      throw new TypeError('count must be a number');
+    console.log(`planning: ${count}`);
+    if('number' !== typeof count || count < 1) {
+      throw new TypeError('count must be a positive number');
     }
+    this.planned = count;
   },
+  // Only called when there is *no* plan
   end() {
-    if(null !== plan) {
-      if(plan !== this.outcomes.length) {
-        this.fail('Didn’t meet plan')
-      }
+    if('number' === typeof this.planned) {
+      this.fail(`Planned for ${this.plan}, but ended`);
     }
     this.isEnded = true;
+  },
+  complete() {
+    console.dir(`${this.planned}, ${this.isEnded}`);
+    if('number' === typeof this.planned) {
+      if(this.outcomes.length !== this.planned) {
+        this.fail(`Planned for ${this.planned} assertions, got ${this.outcomes.length}`);
+      }
+    } else if(!this.isEnded) {
+      this.fail(`Didn’t call end after ${this.outcomes.length} assertions`);
+    }
   },
   true(actual, message) {
     // TODO: Check this.isEnded
@@ -142,17 +160,9 @@ Assert.prototype = {
     }
   },
   equal(actual, expected, message) {
-    // TODO: Check this.isEnded
-    try {
-      message = message || `${actual} === ${expected}`;
-      if(actual === expected) {
-        this.pass(message)
-      } else {
-        this.fail(message);
-      }
-    } catch(error) {
-      this.error(message, error)
-    }
+    // TODO: Need a way to convey error feedback specific to 
+    // the assertion type
+    return this.true(expected === actual, message);
   },
 
   //////////////////////
@@ -179,7 +189,7 @@ Assert.prototype = {
     );
     return {
       totals: totals,
-      details: this.outcomes,
+      assertions: this.outcomes,
     }
   }
 }
