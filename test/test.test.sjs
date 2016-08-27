@@ -1,4 +1,9 @@
-const test = require('/mltap/test');
+'use strict';
+
+// Detect MarkLogic at runtime
+const test = (xdmp && cts) ? 
+               require('/mltap/test') : 
+               require('tape-catch');
 
 test('Arrays are iterable', (assert) => {
   assert.true(true, 'true is true');
