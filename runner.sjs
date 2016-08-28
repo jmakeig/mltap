@@ -29,12 +29,23 @@ function asTAP(results) {
     for(let test of module.tests) {
       out.push('# ' + test.name)
       for(let assertion of test.assertions) {
-        if('pass' === assertion.type) {
-          out.push(`ok ${++counter} ${assertion.message}`);
+        switch(assertion.type) {
+          case 'pass':
+            out.push(`ok ${++counter} ${assertion.message}`);
+            break;
+          case 'fail':
+            out.push(`not ok ${++counter} ${assertion.message}`);
+            break;
+          case 'error':
+            out.push(`not ok ${++counter} ${assertion.message}`);
+            break;
+          default:
+            throw new Error(`${assertion.type} is not a valid assertion type`);
         }
       }
     }  
   }
+  out.push('\n');
   out.push(`1..${counter}`);
   return out.join('\n');
 }

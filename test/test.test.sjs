@@ -1,7 +1,15 @@
 'use strict';
 
+function isMarkLogic() {
+  try {
+    return xdmp && cts;
+  } catch(e) {
+    return false;
+  }
+}
+
 // Detect MarkLogic at runtime
-const test = (xdmp && cts) ? 
+const test = isMarkLogic() ? 
                require('/mltap/test') : 
                require('tape-catch');
 

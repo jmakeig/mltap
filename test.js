@@ -1,43 +1,5 @@
 'use strict';
 
-/* Example output
-
-TAP version 13
-# Markdown generation
-ok 1 Not unescaped
-ok 2 Escaped
-ok 3 Not unescaped
-ok 4 Escaped
-ok 5 Total lines
-# escapeForHTML
-ok 6 should be equal
-ok 7 should be equal
-ok 8 should be equal
-# canary
-ok 9 Indentity transform should be the same
-# Workspace
-ok 10 Total lines
-ok 11 should be equal
-# Workspace not found
-ok 12 Throws a SelectorError
-# Multiple workspaces
-ok 13 Total lines across template and two examples
-# Many workspaces
-ok 14 Sum of 100 iterations
-# XPath select query
-ok 15 Selects one query
-ok 16 Node data is string
-# XPath selects nothing
-ok 17 Intentionally empty selection
-
-1..17
-# tests 17
-# pass  17
-
-# ok
-
-*/
-
 /**
  * CAUTION: This is a total hack.
  * 
@@ -82,7 +44,7 @@ let harness = {
       try {
         this.results.push({
           name: test.name,
-          results: test.run(),
+          assertions: test.run(),
         });
       } catch(error) {
         throw error;
@@ -176,21 +138,22 @@ Assert.prototype = {
     this.outcomes.push({type: 'error', message: message, error: error});
   },
   report() {
-    const totals = this.outcomes.reduce(
-      (total, outcome) => {
-        return Object
-          .assign(
-            {}, 
-            total, 
-            { [outcome.type]: total[outcome.type] + 1 }
-          ); 
-      }, 
-      { pass: 0, fail: 0, error: 0}
-    );
-    return {
-      totals: totals,
-      assertions: this.outcomes,
-    }
+    // const totals = this.outcomes.reduce(
+    //   (total, outcome) => {
+    //     return Object
+    //       .assign(
+    //         {}, 
+    //         total, 
+    //         { [outcome.type]: total[outcome.type] + 1 }
+    //       ); 
+    //   }, 
+    //   { pass: 0, fail: 0, error: 0}
+    // );
+    // return {
+    //   totals: totals,
+    //   assertions: this.outcomes,
+    // }
+    return this.outcomes;
   }
 }
 

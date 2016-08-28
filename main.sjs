@@ -17,7 +17,7 @@
  * @param {class|function} Type
  * @returns A new instance that behaves like a `Type`
  */
-function newInstance(Type, ...args) {
+function newFlatInstance(Type, ...args) {
   // <http://stackoverflow.com/a/3871769/563324>
   let instance = Object.create(Type.prototype);
   instance.constructor = Type;
@@ -34,13 +34,26 @@ function newInstance(Type, ...args) {
   return instance;
 } 
 
+function newInstance(Type, ...args) {
+  // <http://stackoverflow.com/a/3871769/563324>
+  let instance = Object.create(Type.prototype);
+  instance.constructor = Type;
+  // `Type` cannot be declared as an ES2015 class 
+  // becuase class constructors can only
+  // be called with the `new` operator.
+  const constructed = Type.apply(instance, args);
+  if('object' === typeof constructed) {
+     instance = constructed;
+  }
+  return instance;
+}
 
 
 /**
  * ES5-style class
  */
-function Speaker() {
-  this.name = 'Bob';
+function Speaker(name) {
+  this.name = name || 'Anonymous';
 }
 Speaker.prototype = {
   declare(message) {
@@ -55,9 +68,23 @@ Speaker.prototype = {
  */
 const obj = {
   msg: 'Hi!',
-  speaker: newInstance(Speaker),
+  speaker: new Speaker('Wayne'),
   say() {
     return this.speaker.declare(this.msg);
   }
 };
 obj;
+
+class ListenerClass {
+  constructor() {}
+  hear(words) {
+    return 'Ack!';
+  }
+}
+
+function ListenerFunc() {}
+Listener.prototype.hear = function(words) {
+  return 'Ack!';
+}
+
+new Listener();
