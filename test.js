@@ -1,6 +1,6 @@
 'use strict';
 
-const StackTrace = require('stack-trace');
+const StackTrace = require('lib/stack-trace');
 
 /**
  * CAUTION: This is a total hack.
