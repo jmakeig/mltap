@@ -49,6 +49,7 @@ let harness = {
           assertions: test.run(),
         });
       } catch(error) {
+        console.log('Harness.run');
         throw error;
       }
     }
@@ -70,6 +71,7 @@ Test.prototype = {
     } catch(error) {
       // This should only happen with runtime exceptions, like TypeError,
       // from this library, not exceptions thrown from tested code
+      console.log('Test.prototype.run');
       throw error;
     } finally{
       assert.complete();
@@ -87,7 +89,6 @@ function Assert() {
 }
 Assert.prototype = {
   plan(count) {
-    console.log(`planning: ${count}`);
     if('number' !== typeof count || count < 1) {
       throw new TypeError('count must be a positive number');
     }
@@ -101,7 +102,6 @@ Assert.prototype = {
     this.isEnded = true;
   },
   complete() {
-    console.dir(`${this.planned}, ${this.isEnded}`);
     if('number' === typeof this.planned) {
       if(this.outcomes.length !== this.planned) {
         this.fail(
@@ -114,26 +114,27 @@ Assert.prototype = {
         );
       }
     } else if(!this.isEnded) {
-      this.fail(`Didn’t call end after ${this.outcomes.length} assertions`, {expected: true, actual: actual});
+      this.fail(
+        `Didn’t call end after ${this.outcomes.length} assertions`, 
+        {
+          expected: true, 
+          actual: false,
+        });
     }
   },
   true(actual, message) {
     // TODO: Check this.isEnded
-    try {
-      message = message || `false`;
-      if(true === actual) {
-        this.pass(message)
-      } else {
-        this.fail(
-          message, 
-          {
-            expected: true, 
-            actual:   actual,
-            at:       StackTrace.get()[1], // 0 is test.js 
-          });
-      }
-    } catch(error) {
-      this.error(message, error)
+    message = message || `false`;
+    if(true === actual) {
+      this.pass(message)
+    } else {
+      this.fail(
+        message, 
+        {
+          expected: true, 
+          actual:   actual,
+          at:       StackTrace.get()[1], // 0 is test.js 
+        });
     }
   },
   equal(actual, expected, message) {
