@@ -1,0 +1,34 @@
+{
+  "name": "mltap",
+  "version": "0.0.1",
+  "description": "TAP producer and test runner for MarkLogic",
+  "main": "runner.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "tape test/**.test.sjs | tap-notify | tap-diff"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jmakeig/mltap.git"
+  },
+  "keywords": [
+    "tap",
+    "test",
+    "tape",
+    "marklogic"
+  ],
+  "author": "Justin Makeig <jmpublic+github@makeig.com> (https://www.github.com/jmakeig)",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/jmakeig/mltap/issues"
+  },
+  "homepage": "https://github.com/jmakeig/mltap#readme",
+  "devDependencies": {
+    "tap-diff": "^0.1.1",
+    "tap-notify": "^1.0.0",
+    "tape": "^4.6.0",
+    "tape-catch": "^1.0.6"
+  }
+}
