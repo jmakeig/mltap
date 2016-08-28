@@ -14,7 +14,7 @@ const test = isMarkLogic() ?
                require('tape-catch');
 
 test('Arrays are iterable', (assert) => {
-  assert.true(true, 'true is true');
+  assert.true(!true, 'true is true');
   assert.true(!false, 'not false is also true');
   assert.end();
 });

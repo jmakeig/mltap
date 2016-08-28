@@ -1,5 +1,7 @@
 'use strict';
 
+const StackTrace = require('stack-trace');
+
 /**
  * CAUTION: This is a total hack.
  * 
@@ -102,10 +104,17 @@ Assert.prototype = {
     console.dir(`${this.planned}, ${this.isEnded}`);
     if('number' === typeof this.planned) {
       if(this.outcomes.length !== this.planned) {
-        this.fail(`Planned for ${this.planned} assertions, got ${this.outcomes.length}`);
+        this.fail(
+          `Planned for ${this.planned} assertions, got ${this.outcomes.length}`, 
+          {
+            expected: this.planned, 
+            actual:   this.outcomes.length, 
+            at:       StackTrace.get(),
+          }
+        );
       }
     } else if(!this.isEnded) {
-      this.fail(`Didn’t call end after ${this.outcomes.length} assertions`);
+      this.fail(`Didn’t call end after ${this.outcomes.length} assertions`, {expected: true, actual: actual});
     }
   },
   true(actual, message) {
@@ -115,24 +124,36 @@ Assert.prototype = {
       if(true === actual) {
         this.pass(message)
       } else {
-        this.fail(message);
+        this.fail(
+          message, 
+          {
+            expected: true, 
+            actual:   actual,
+            at:       StackTrace.get()[1], // 0 is test.js 
+          });
       }
     } catch(error) {
       this.error(message, error)
     }
   },
   equal(actual, expected, message) {
-    // TODO: Need a way to convey error feedback specific to 
-    // the assertion type
-    return this.true(expected === actual, message);
+    return this.true(
+      expected === actual, 
+      message, 
+      {expected: expected, actual: actual}
+    );
   },
 
   //////////////////////
   pass(message) {
     this.outcomes.push({type: 'pass', message: message});
   },
-  fail(message) {
-    this.outcomes.push({type: 'fail', message: message});
+  fail(message, details) {
+    this.outcomes.push({
+      type: 'fail', 
+      message: message,
+      details: Object.assign({operator: 'fail'}, details || {})
+    });
   },
   error(message, error) {
     this.outcomes.push({type: 'error', message: message, error: error});
