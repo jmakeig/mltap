@@ -1,0 +1,22 @@
+#! /usr/bin/env node
+
+const doc =
+`
+Tape-like JavaScript test runner for MarkLogic.
+
+Usage:
+  mltap <test>...
+  mltap <test>... --output <file>
+  mltap <test>... --stdout
+  mltap --help
+
+Options:
+  <test>                         A list of tests, usually a glob
+  -o <file>, --output <file>     Send output to a file
+  --stdout                       Send to standard out
+  -h, --help                     Help
+`;
+
+const opts = require('docopt').docopt(doc);
+
+process.stdout.write(`${opts['<test>']}\n`);

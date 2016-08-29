@@ -33,5 +33,8 @@
     "faucet": "0.0.1",
     "tap-diff": "^0.1.1",
     "tap-notify": "^1.0.0"
+  },
+  "dependencies": {
+    "docopt": "^0.6.2"
   }
 }
