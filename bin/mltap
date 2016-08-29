@@ -1,0 +1,52 @@
+#! /usr/bin/env node
+
+const doc =
+`
+Tape-like JavaScript test runner for MarkLogic.
+
+Usage:
+  mltap <test>...
+  mltap <test>... --output <file>
+  mltap <test>... --stdout
+  mltap --help
+
+Options:
+  <test>                         A list of tests, usually a glob
+  -o <file>, --output <file>     Send output to a file
+  --stdout                       Send to standard out
+  -h, --help                     Help
+`;
+
+const opts = require('docopt').docopt(doc);
+
+// const marklogic = require('marklogic');
+
+// const conn = {
+//   host: 'localhost',
+//   port: '8000',
+//   user: 'admin',
+//   password: 'admin',
+//   authType: 'digest',
+// }
+// const client = marklogic.createDatabaseClient(conn);
+// client.invoke(`/mltap`, {tests: []})
+//   .result(
+//     response => console.dir(response),
+//     error => process.exit(1)
+//   );
+
+const http = require('http');
+
+const request = require('request');
+
+request.post('http://localhost:8992/remote.sjs', {
+  auth: {
+    user: 'admin',
+    pass: 'admin',
+    sendImmediately: false,
+  },
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded'
+  },
+  body: opts['<test>'].map(item => `tests=${item}`).join('&'),
+}, (error, response, body) => console.log(body));

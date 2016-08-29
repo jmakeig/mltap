@@ -1,13 +1,5 @@
 'use strict';
 
-function isMarkLogic() {
-  try {
-    return xdmp && cts;
-  } catch(e) {
-    return false;
-  }
-}
-
 // Detect MarkLogic at runtime
 const test = isMarkLogic() ? 
                require('/mltap/test') : 
@@ -16,6 +8,8 @@ const test = isMarkLogic() ?
 const lib = require('../lib.js');
 
 test('Relative paths for libraries', (assert) => {
-  assert.true('asdfs' === lib(), 'lib returns "asdf"');
+  assert.true('asdf' === lib(), 'lib returns "asdf"');
   assert.end();
 });
+
+function isMarkLogic() {try {return xdmp && cts;} catch(e) {return false;}}

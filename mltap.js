@@ -1,26 +1,44 @@
-'use strict'
-const ctx = {modules: 0, root: '/Users/jmakeig/Workspaces/mltap'};
+'use strict';
 
-const tests = [
-  'test/test.test.sjs',
-  'test/lib.test.sjs',
-];
+// const ctx = { modules: 0, root: '/Users/jmakeig/Workspaces/mltap' };
 
-const results = [];
+// const tests = [
+//   'test/test.test.sjs',
+//   'test/lib.test.sjs',
+// ];
 
-for(let test of tests) {
-  let harness = fn.head(xdmp.invoke(test, {'__filename': test}, ctx));
-  harness.run();
-  results.push(
-    {
-      module: test,
-      tests: harness.results,
-    }
-  );
+/**
+ * Run the tests at the referenced paths and return a TAP string.
+ * 
+ * @example
+ * 'use strict';
+ * const mltap = require('/mltap');
+ * mltap(['test/test.test.sjs', 'test/lib.test.sjs',]);
+ * 
+ * @param {Array<string>} tests
+ * @returns {string} TAP 13 output
+ */
+function runner(tests) {
+  const results = [];
+  for(let test of tests) {
+    let harness = fn.head(xdmp.invoke(test));
+    harness.run();
+    results.push(
+      {
+        module: test,
+        tests: harness.results,
+      }
+    );
+  }
+  return asTAP(results);
 }
 
-asTAP(results);
-
+/**
+ * 
+ * 
+ * @param {Array} results
+ * @returns
+ */
 function asTAP(results) {
   /**
    * 
@@ -46,10 +64,6 @@ function asTAP(results) {
             break;
           case 'fail':
             out.push(`not ok ${++counter} ${assertion.message}`);
-            // YAML: Use |- to strip final line break in a multi-line value
-            // key: |-
-            //    value
-            // <https://github.com/substack/tape/blob/master/lib/results.js#L139-L166>
             out.push(indent('---', 2));
               out.push(indent(`operator: ok`, 4));
               out.push(indent(`expected: ${assertion.expected}`, 4));
@@ -84,3 +98,5 @@ function asTAP(results) {
   out.push(`1..${counter}`);
   return out.join('\n');
 }
+
+module.exports = runner;

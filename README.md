@@ -6,52 +6,61 @@ A (partial) implementation of the [tape](https://github.com/substack/tape) API. 
 ```js
 'use strict';
 
-function isMarkLogic() {
-  try {
-    return xdmp && cts;
-  } catch(e) {
-    return false;
-  }
-}
-
-// Detect MarkLogic at runtime
 const test = isMarkLogic() ? 
                require('/mltap/test') : 
                require('tape-catch');
 
-test('Arrays are iterable', (assert) => {
+test('Throws an error after some assertions pass', (assert) => {
   assert.true(true, 'true is true');
   throw new Error('Test error');
   assert.true(!false, 'not false is also true');
   assert.end();
 });
 
-test('This test has a plan', (assert) => {
+test('This test has a fulfilled plan', (assert) => {
   assert.plan(2);
   assert.true('asdf'.length === 4,  'asdf is length 4');
   assert.true('asdfs'.length === 5, 'asdfs is length 5');
-  //assert.end();
 });
+
+test('This test has an unfulfilled plan', (assert) => {
+  assert.plan(25);
+  assert.true('asdf'.length === 4,  'asdf is length 4');
+  assert.true('asdfs'.length === 5, 'asdfs is length 5');
+});
+
+
+function isMarkLogic() {try {return xdmp && cts;} catch(e) {return false;}}
 ```
 
 ```
 TAP version 13
-# Arrays are iterable
+# Throws an error after some assertions pass
 ok 1 true is true
 not ok 2 Error: Test error
   ---
     operator: error
     actual: undefined
-    at: Test.impl (/test/test.test.sjs:18:9)
+    at: Test.impl (/test/test.test.sjs:9:9)
     stack: |-
       Error: Test error
-          at Test.impl (/test/test.test.sjs:18:9)
+          at Test.impl (/test/test.test.sjs:9:9)
           at Test.run (/mltap/test.js:76:12)
           at Object.run (/mltap/test.js:49:28)
   ...
-# This test has a plan
+# This test has a fulfilled plan
 ok 3 asdf is length 4
 ok 4 asdfs is length 5
+# This test has an unfulfilled plan
+ok 5 asdf is length 4
+ok 6 asdfs is length 5
+not ok 7 Planned for 25 assertions, got 2
+  ---
+    operator: ok
+    expected: 25
+    actual: 2
+    at: Test.run (/mltap/test.js:81:10)
+  ...
 
-1..4
+1..7
 ```
