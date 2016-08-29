@@ -1,26 +1,38 @@
 'use strict'
-const ctx = {modules: 0, root: '/Users/jmakeig/Workspaces/mltap'};
 
-const tests = [
-  'test/test.test.sjs',
-  'test/lib.test.sjs',
-];
+// const ctx = { modules: 0, root: '/Users/jmakeig/Workspaces/mltap' };
 
-const results = [];
+// const tests = [
+//   'test/test.test.sjs',
+//   'test/lib.test.sjs',
+// ];
 
-for(let test of tests) {
-  let harness = fn.head(xdmp.invoke(test, {'__filename': test}, ctx));
-  harness.run();
-  results.push(
-    {
-      module: test,
-      tests: harness.results,
-    }
-  );
+/**
+ * 
+ * 
+ * @param {Array<string>} tests
+ */
+function runner(tests) {
+  const results = [];
+  for(let test of tests) {
+    let harness = fn.head(xdmp.invoke(test));
+    harness.run();
+    results.push(
+      {
+        module: test,
+        tests: harness.results,
+      }
+    );
+  }
+  return asTAP(results);
 }
 
-asTAP(results);
-
+/**
+ * 
+ * 
+ * @param {Array} results
+ * @returns
+ */
 function asTAP(results) {
   /**
    * 
@@ -84,3 +96,5 @@ function asTAP(results) {
   out.push(`1..${counter}`);
   return out.join('\n');
 }
+
+module.exports = runner;
