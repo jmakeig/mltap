@@ -16,6 +16,6 @@ const test = isMarkLogic() ?
 const lib = require('../lib.js');
 
 test('Relative paths for libraries', (assert) => {
-  assert.true('asdf' === lib(), 'lib returns "asdf"');
+  assert.true('asdfs' === lib(), 'lib returns "asdf"');
   assert.end();
 });

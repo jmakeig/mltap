@@ -107,11 +107,13 @@ Test.prototype = {
    * 
    * @param {Error} error
    */
-  error(error) {
+  error(error, at) {
     const stack = StackTrace.parse(error);
+    console.log(error.message);
     this.outcomes.push({
       type: 'error', 
       message: error.message, 
+      at: stack[0].toString(),
       stack: stack 
     });
   },
