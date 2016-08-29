@@ -62,32 +62,59 @@ let harness = {
 function Test(name, impl) {
   this.name = name;
   this.impl = impl;
-}
-Test.prototype = {
-  run() {
-    const assert = newInstance(Assert);
-    try {
-      this.impl(assert);
-    } catch(error) {
-      // This should only happen with runtime exceptions, like TypeError,
-      // from this library, not exceptions thrown from tested code
-      console.log('Test.prototype.run');
-      throw error;
-    } finally{
-      assert.complete();
-      return assert.report();
-    }
-  }
-}
 
-function Assert() {
-  this.planned = null; // Is this Test or Assert state?
+  this.planned = null; 
   //this.hasPlan = false; // TODO: Turn into a getter
   this.isEnded = false;
+  this.isErrored = false;
 
   this.outcomes = new Array();
 }
-Assert.prototype = {
+Test.prototype = {
+  run() {
+    try {
+      this.impl(this);
+    } catch(error) {
+      this.error(error);
+      this.isErrored = true;
+    }
+    this.complete();
+    return this.report();
+  },
+  /////////////////////////////////////////////////////////////////////
+  pass(message) {
+    this.outcomes.push({type: 'pass', message: message});
+  },
+  /**
+   * 
+   * 
+   * @param {string} [message]
+   * @param {any} [expected]
+   * @param {any} [actual]
+   * @param {string} [at]
+   */
+  fail(message, expected, actual, at) {
+    this.outcomes.push({
+      type: 'fail', 
+      message: message,
+      expected: expected,
+      actual: actual,
+      at: at,
+    });
+  },
+  /**
+   * Reports an unexpected error in the test.
+   * 
+   * @param {Error} error
+   */
+  error(error) {
+    const stack = StackTrace.parse(error);
+    this.outcomes.push({
+      type: 'error', 
+      message: error.message, 
+      stack: stack 
+    });
+  },
   plan(count) {
     if('number' !== typeof count || count < 1) {
       throw new TypeError('count must be a positive number');
@@ -97,29 +124,28 @@ Assert.prototype = {
   // Only called when there is *no* plan
   end() {
     if('number' === typeof this.planned) {
-      this.fail(`Planned for ${this.plan}, but ended`);
+      this.fail(`Planned for ${this.planned}, but ended`, this.planned, this.outcomes.length);
     }
     this.isEnded = true;
   },
   complete() {
+    if(this.isErrored) return;
     if('number' === typeof this.planned) {
       if(this.outcomes.length !== this.planned) {
         this.fail(
           `Planned for ${this.planned} assertions, got ${this.outcomes.length}`, 
-          {
-            expected: this.planned, 
-            actual:   this.outcomes.length, 
-            at:       StackTrace.get(),
-          }
+          this.planned, 
+          this.outcomes.length, 
+          StackTrace.get()[1]
         );
       }
     } else if(!this.isEnded) {
       this.fail(
         `Didn’t call end after ${this.outcomes.length} assertions`, 
-        {
-          expected: true, 
-          actual: false,
-        });
+        true, 
+        false,
+        StackTrace.get()[1]
+      );
     }
   },
   true(actual, message) {
@@ -130,51 +156,19 @@ Assert.prototype = {
     } else {
       this.fail(
         message, 
-        {
-          expected: true, 
-          actual:   actual,
-          at:       StackTrace.get()[1], // 0 is test.js 
-        });
+        true, 
+        actual,
+        StackTrace.get()[1] // 0 is test.js 
+      );
     }
   },
   equal(actual, expected, message) {
     return this.true(
       expected === actual, 
-      message, 
-      {expected: expected, actual: actual}
+      message
     );
   },
-
-  //////////////////////
-  pass(message) {
-    this.outcomes.push({type: 'pass', message: message});
-  },
-  fail(message, details) {
-    this.outcomes.push({
-      type: 'fail', 
-      message: message,
-      details: Object.assign({operator: 'fail'}, details || {})
-    });
-  },
-  error(message, error) {
-    this.outcomes.push({type: 'error', message: message, error: error});
-  },
   report() {
-    // const totals = this.outcomes.reduce(
-    //   (total, outcome) => {
-    //     return Object
-    //       .assign(
-    //         {}, 
-    //         total, 
-    //         { [outcome.type]: total[outcome.type] + 1 }
-    //       ); 
-    //   }, 
-    //   { pass: 0, fail: 0, error: 0}
-    // );
-    // return {
-    //   totals: totals,
-    //   assertions: this.outcomes,
-    // }
     return this.outcomes;
   }
 }

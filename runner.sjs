@@ -22,7 +22,14 @@ for(let test of tests) {
 asTAP(results);
 
 function asTAP(results) {
-  //return results;
+  /**
+   * 
+   * 
+   * @param {string} str
+   * @param {number} [num=2]
+   * @param {any} [pad=' ']
+   * @returns
+   */
   function indent(str, num, pad) {
     pad = pad || ' ';
     return ' '.repeat(num) + str;
@@ -31,7 +38,7 @@ function asTAP(results) {
   const out = ['TAP version 13'];
   for(let module of results) {
     for(let test of module.tests) {
-      out.push(`# ${test.name}`)
+      out.push(`# ${test.name}`);
       for(let assertion of test.assertions) {
         switch(assertion.type) {
           case 'pass':
@@ -39,12 +46,18 @@ function asTAP(results) {
             break;
           case 'fail':
             out.push(`not ok ${++counter} ${assertion.message}`);
+            // YAML: Use |- to strip final line break in a multi-line value
+            // key: |-
+            //    value
             // <https://github.com/substack/tape/blob/master/lib/results.js#L139-L166>
             out.push(indent('---', 2));
-              out.push(indent(`operator: ${assertion.details.operator}`, 4));
+              out.push(indent(`operator: ${assertion.details.type}`, 4));
               out.push(indent(`expected: ${assertion.details.expected}`, 4));
               out.push(indent(`actual: ${assertion.details.actual}`, 4));
               out.push(indent(`at: ${assertion.details.at}`, 4));
+              if(assertion.details.stack) {
+                console.log(assertion.details.stack);
+              }
             out.push(indent('...', 2));
             break;
           case 'error':
