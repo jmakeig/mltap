@@ -48,7 +48,14 @@ client.eval(bootstrap,
       process.exit(0);
     },
     error => { 
-      process.stderr.write(error.body.errorResponse.message + '\n'); 
+      // console.dir(error);
+      if('SEC-PRIV' === error.body.errorResponse.messageCode) {
+        process.stderr.write('Are you sure you configured the security settings? ');
+        process.stderr.write('mltap requires roles, amps, and privileges.\n');
+        process.stderr.write('\nFrom where you downloaded mltap, run:\n');
+        process.stderr.write('    gradle mlDeploy\n');
+      }
+      process.stderr.write('\n' + error.body.errorResponse.message + '\n'); 
       process.exit(1); 
     }
   );

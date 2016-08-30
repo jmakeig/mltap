@@ -20,6 +20,7 @@
  * @returns {string} TAP 13 output
  */
 function runner(tests, root, modules) {
+  xdmp.securityAssert(['http://github.com/jmakeig/mltap/runner'], 'execute');
   const results = [];
   const ctx = {
     root: root,
