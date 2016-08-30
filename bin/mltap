@@ -19,34 +19,50 @@ Options:
 
 const opts = require('docopt').docopt(doc);
 
-// const marklogic = require('marklogic');
+const marklogic = require('marklogic');
+const conn = {
+  host: 'localhost',  // TODO: Parameterize me
+  port: '8000',       // TODO: Parameterize me
+  user: 'admin',      // TODO: Parameterize me
+  password: 'admin',  // TODO: Parameterize me 
+  authType: 'digest', // TODO: Parameterize me
+}
+const client = marklogic.createDatabaseClient(conn);
 
-// const conn = {
-//   host: 'localhost',
-//   port: '8000',
-//   user: 'admin',
-//   password: 'admin',
-//   authType: 'digest',
-// }
-// const client = marklogic.createDatabaseClient(conn);
-// client.invoke(`/mltap`, {tests: []})
-//   .result(
-//     response => console.dir(response),
-//     error => process.exit(1)
-//   );
+/*
+ * Assumes external variables:
+ *   Array<string> tests - The paths to the tests, relative to the root
+ *   string root - The root context to resolve module imports. Assumes file system
+ */
+const bootstrap = `
+  'use strict';
+  xdmp.invokeFunction(function() {
+    return require('/mltap/mltap')(tests);
+  }, {modules: 0, root: root});`;
 
-const http = require('http');
+// TODO: Figure out the minimum privileges and/or how to amp
+client.eval(bootstrap, 
+  {
+    root: process.cwd(), //'/Users/jmakeig/Workspaces/tmptest', 
+    tests: opts['<test>'], //['test/test.test.sjs', 'test/lib.test.sjs',]
+  })
+  .result(
+    response => process.stdout.write(response[0].value + '\n'),
+    error => process.exit(1)
+  );
 
-const request = require('request');
+// const http = require('http');
 
-request.post('http://localhost:8992/remote.sjs', {
-  auth: {
-    user: 'admin',
-    pass: 'admin',
-    sendImmediately: false,
-  },
-  headers: {
-    'Content-Type': 'application/x-www-form-urlencoded'
-  },
-  body: opts['<test>'].map(item => `tests=${item}`).join('&'),
-}, (error, response, body) => console.log(body));
+// const request = require('request');
+
+// request.post('http://localhost:8992/remote.sjs', {
+//   auth: {
+//     user: 'admin',
+//     pass: 'admin',
+//     sendImmediately: false,
+//   },
+//   headers: {
+//     'Content-Type': 'application/x-www-form-urlencoded'
+//   },
+//   body: opts['<test>'].map(item => `tests=${item}`).join('&'),
+// }, (error, response, body) => console.log(body));
