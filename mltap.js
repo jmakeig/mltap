@@ -9,6 +9,7 @@
 
 /**
  * Run the tests at the referenced paths and return a TAP string.
+ * Must be amped to the mltap-internal role.
  * 
  * @example
  * 'use strict';
@@ -104,4 +105,4 @@ function asTAP(results) {
   return out.join('\n');
 }
 
-module.exports = runner;
+module.exports = module.amp(runner);

@@ -21,11 +21,11 @@ const opts = require('docopt').docopt(doc);
 
 const marklogic = require('marklogic');
 const conn = {
-  host: 'localhost',  // TODO: Parameterize me
-  port: '8000',       // TODO: Parameterize me
-  user: 'admin',      // TODO: Parameterize me
-  password: 'admin',  // TODO: Parameterize me 
-  authType: 'digest', // TODO: Parameterize me
+  host:     'localhost',  // TODO: Parameterize me
+  port:     '8000',       // TODO: Parameterize me
+  user:     'tester',     // TODO: Parameterize me
+  password: 'tester',     // TODO: Parameterize me 
+  authType: 'digest',     // TODO: Parameterize me
 }
 const client = marklogic.createDatabaseClient(conn);
 
@@ -43,22 +43,12 @@ client.eval(bootstrap,
     tests: opts['<test>'], //['test/test.test.sjs', 'test/lib.test.sjs',]
   })
   .result(
-    response => process.stdout.write(response[0].value + '\n'),
-    error => { console.dir(error); process.exit(1); }
+    response => {
+      process.stdout.write(response[0].value + '\n');
+      process.exit(0);
+    },
+    error => { 
+      process.stderr.write(error.body.errorResponse.message + '\n'); 
+      process.exit(1); 
+    }
   );
-
-// const http = require('http');
-
-// const request = require('request');
-
-// request.post('http://localhost:8992/remote.sjs', {
-//   auth: {
-//     user: 'admin',
-//     pass: 'admin',
-//     sendImmediately: false,
-//   },
-//   headers: {
-//     'Content-Type': 'application/x-www-form-urlencoded'
-//   },
-//   body: opts['<test>'].map(item => `tests=${item}`).join('&'),
-// }, (error, response, body) => console.log(body));
