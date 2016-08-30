@@ -2,7 +2,5 @@
   "privilege-name": "mltap-runner",
   "action": "http://github.com/jmakeig/mltap/runner",
   "kind": "execute",
-  "role": [
-    "mltap-tester"
-  ]
+  "role": [ ]
 }

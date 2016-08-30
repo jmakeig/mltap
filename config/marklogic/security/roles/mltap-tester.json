@@ -1,11 +1,16 @@
 {
   "role-name": "mltap-tester",
-  "description": "",
+  "description": "Required role for running mltap tests.",
   "privilege": [
     {
       "action": "http://marklogic.com/xdmp/privileges/xdbc-eval",
       "kind": "execute",
       "privilege-name": "xdbc:eval"
+    },
+    {
+      "action": "http://github.com/jmakeig/mltap/runner",
+      "kind": "execute",
+      "privilege-name": "mltap-runner"
     }
   ]
 }
