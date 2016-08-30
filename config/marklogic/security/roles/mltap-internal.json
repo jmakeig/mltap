@@ -1,0 +1,21 @@
+{
+  "role-name": "mltap-internal",
+  "description": "mltap interal role used *only* for amping. Do not assign this to a user.",
+  "privilege": [
+    {
+      "action": "http://marklogic.com/xdmp/privileges/xdmp-invoke",
+      "kind": "execute",
+      "privilege-name": "xdmp:invoke"
+    },
+    {
+      "action": "http://marklogic.com/xdmp/privileges/xdmp-invoke-modules-change-file",
+      "kind": "execute",
+      "privilege-name": "xdmp:invoke-modules-change-file"
+    },
+    {
+      "action": "http://marklogic.com/xdmp/privileges/xdmp-invoke-modules-change",
+      "kind": "execute",
+      "privilege-name": "xdmp:invoke-modules-change"
+    }
+  ]
+}

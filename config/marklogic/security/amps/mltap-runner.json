@@ -1,0 +1,7 @@
+{
+  "local-name": "runner",
+  "document-uri": "/mltap/mltap.js",
+  "role": [
+    "mltap-internal"
+  ]
+}

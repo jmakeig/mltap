@@ -9,6 +9,7 @@
 
 /**
  * Run the tests at the referenced paths and return a TAP string.
+ * Must be amped to the mltap-internal role.
  * 
  * @example
  * 'use strict';
@@ -18,10 +19,16 @@
  * @param {Array<string>} tests
  * @returns {string} TAP 13 output
  */
-function runner(tests) {
+function runner(tests, root, modules) {
+  xdmp.securityAssert(['http://github.com/jmakeig/mltap/runner'], 'execute');
   const results = [];
+  const ctx = {
+    root: root,
+    modules: modules || 0,
+    ignoreAmps: false,
+  }
   for(let test of tests) {
-    let harness = fn.head(xdmp.invoke(test));
+    let harness = fn.head(xdmp.invoke(test, null, ctx));
     harness.run();
     results.push(
       {
@@ -99,4 +106,4 @@ function asTAP(results) {
   return out.join('\n');
 }
 
-module.exports = runner;
+module.exports = module.amp(runner);

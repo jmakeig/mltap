@@ -21,11 +21,11 @@ const opts = require('docopt').docopt(doc);
 
 const marklogic = require('marklogic');
 const conn = {
-  host: 'localhost',  // TODO: Parameterize me
-  port: '8000',       // TODO: Parameterize me
-  user: 'admin',      // TODO: Parameterize me
-  password: 'admin',  // TODO: Parameterize me 
-  authType: 'digest', // TODO: Parameterize me
+  host:     'localhost',  // TODO: Parameterize me
+  port:     '8000',       // TODO: Parameterize me
+  user:     'tester',     // TODO: Parameterize me
+  password: 'tester',     // TODO: Parameterize me 
+  authType: 'digest',     // TODO: Parameterize me
 }
 const client = marklogic.createDatabaseClient(conn);
 
@@ -34,35 +34,28 @@ const client = marklogic.createDatabaseClient(conn);
  *   Array<string> tests - The paths to the tests, relative to the root
  *   string root - The root context to resolve module imports. Assumes file system
  */
-const bootstrap = `
-  'use strict';
-  xdmp.invokeFunction(function() {
-    return require('/mltap/mltap')(tests);
-  }, {modules: 0, root: root});`;
+const bootstrap = `require('/mltap/mltap')(tests, root, 0);`;
 
-// TODO: Figure out the minimum privileges and/or how to amp
+// TODO: Figure out 
 client.eval(bootstrap, 
   {
     root: process.cwd(), //'/Users/jmakeig/Workspaces/tmptest', 
     tests: opts['<test>'], //['test/test.test.sjs', 'test/lib.test.sjs',]
   })
   .result(
-    response => process.stdout.write(response[0].value + '\n'),
-    error => process.exit(1)
+    response => {
+      process.stdout.write(response[0].value + '\n');
+      process.exit(0);
+    },
+    error => { 
+      // console.dir(error);
+      if('SEC-PRIV' === error.body.errorResponse.messageCode) {
+        process.stderr.write('Are you sure you configured the security settings? ');
+        process.stderr.write('mltap requires roles, amps, and privileges.\n');
+        process.stderr.write('\nFrom where you downloaded mltap, run:\n');
+        process.stderr.write('    gradle mlDeploy\n');
+      }
+      process.stderr.write('\n' + error.body.errorResponse.message + '\n'); 
+      process.exit(1); 
+    }
   );
-
-// const http = require('http');
-
-// const request = require('request');
-
-// request.post('http://localhost:8992/remote.sjs', {
-//   auth: {
-//     user: 'admin',
-//     pass: 'admin',
-//     sendImmediately: false,
-//   },
-//   headers: {
-//     'Content-Type': 'application/x-www-form-urlencoded'
-//   },
-//   body: opts['<test>'].map(item => `tests=${item}`).join('&'),
-// }, (error, response, body) => console.log(body));
