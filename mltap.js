@@ -18,10 +18,15 @@
  * @param {Array<string>} tests
  * @returns {string} TAP 13 output
  */
-function runner(tests) {
+function runner(tests, root, modules) {
   const results = [];
+  const ctx = {
+    root: root,
+    modules: modules || 0,
+    ignoreAmps: false,
+  }
   for(let test of tests) {
-    let harness = fn.head(xdmp.invoke(test));
+    let harness = fn.head(xdmp.invoke(test, null, ctx));
     harness.run();
     results.push(
       {

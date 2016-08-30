@@ -34,13 +34,9 @@ const client = marklogic.createDatabaseClient(conn);
  *   Array<string> tests - The paths to the tests, relative to the root
  *   string root - The root context to resolve module imports. Assumes file system
  */
-const bootstrap = `
-  'use strict';
-  xdmp.invokeFunction(function() {
-    return require('/mltap/mltap')(tests);
-  }, {modules: 0, root: root});`;
+const bootstrap = `require('/mltap/mltap')(tests, root, 0);`;
 
-// TODO: Figure out the minimum privileges and/or how to amp
+// TODO: Figure out 
 client.eval(bootstrap, 
   {
     root: process.cwd(), //'/Users/jmakeig/Workspaces/tmptest', 
@@ -48,7 +44,7 @@ client.eval(bootstrap,
   })
   .result(
     response => process.stdout.write(response[0].value + '\n'),
-    error => process.exit(1)
+    error => { console.dir(error); process.exit(1); }
   );
 
 // const http = require('http');
