@@ -1,0 +1,11 @@
+{
+  "role-name": "mltap-tester",
+  "description": "",
+  "privilege": [
+    {
+      "action": "http://marklogic.com/xdmp/privileges/xdbc-eval",
+      "kind": "execute",
+      "privilege-name": "xdbc:eval"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "user-name": "tester",
+  "description": "Dummy test user. Instead of this one, you should apply the mltap-test role to your own users.",
+  "role": [
+    "mltap-tester"
+  ],
+  "password": "tester"
+}
