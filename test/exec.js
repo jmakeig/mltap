@@ -1,4 +1,5 @@
 'use strict';
+const path = require('path');
 const child = require('child_process');
 
 /**
@@ -18,13 +19,16 @@ function exec(tests) {
   }
   return new Promise(function(resolve, reject) {
     // console.dir(tests);
-    child.exec(`../bin/mltap ${tests.join(' ')}`, (error, stdout, stderr) => {
-      if(error) {
-        reject(error, stderr);
-      } else {
-        resolve(stdout);
+    child.exec(`bin/mltap ${tests.join(' ')}`, 
+      {cwd: path.resolve(__filename, process.cwd())}, // TODO: Is this the correct logic? mltap needs 
+        (error, stdout, stderr) => {
+        if(error) {
+          reject(error, stderr);
+        } else {
+          resolve(stdout);
+        }
       }
-    })
+    )
   });
 }
 

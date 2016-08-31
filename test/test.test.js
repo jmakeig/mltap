@@ -5,7 +5,7 @@ const exec = require('./exec');
 
 test('Throws an error after some assertions pass', (assert) => {
   assert.plan(1);
-  exec('test.test.sjs')
+  exec('test/test.test.sjs')
     .then((tap) => {
       assert.comment(tap.length);
       assert.true(true, '’Tis true');
