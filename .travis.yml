@@ -1,3 +1,9 @@
 language: node_js
 node_js:
   - "6"
+sudo: true
+before_install:
+  - echo 'America/Los_Angeles' | sudo tee /etc/timezone
+  - sudo dpkg-reconfigure --frontend noninteractive tzdata
+install:
+  - ./scripts/install-dependencies.sh
