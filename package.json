@@ -7,12 +7,10 @@
     "test": "test"
   },
   "scripts": {
-    "test-marklogic": "bin/mltap test/**.test.sjs",
-    "test-marklogic-pretty": "bin/mltap test/**.test.sjs | tap-notify | tap-diff",
-    "test-node": "tape test/**.test.sjs",
-    "test-node-pretty": "tape test/**.test.sjs | tap-notify | tap-diff",
-    "test-browser": "echo 'Not yet implemented'; exit 1;",
-    "test": "echo '\n\nRunning tests with mltap in MarkLogic\n'; bin/mltap test/**.test.sjs && echo '\n\nRunning tests with tape in Node\n'; tape test/**.test.sjs",
+    "test": "tape test/*.test.js",
+    "test-pretty": "tape test/*.test.js | tap-notify | tap-diff",
+    "test-marklogic": "bin/mltap test/*.test.sjs",
+    "test-marklogic-pretty": "bin/mltap test/*.test.sjs | tap-notify | tap-diff",
     "config": "gradle mlDeploy && mkdir -p ~/Library/MarkLogic/Modules/mltap; cp -R mltap.js test.js lib ~/Library/MarkLogic/Modules/mltap/"
   },
   "repository": {
