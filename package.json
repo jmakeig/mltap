@@ -32,6 +32,7 @@
   },
   "homepage": "https://github.com/jmakeig/mltap#readme",
   "devDependencies": {
+    "tap-out": "^1.4.2",
     "tape": "^4.6.0",
     "tape-catch": "^1.0.6"
   },
