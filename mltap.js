@@ -64,6 +64,7 @@ function asTAP(results) {
   for(let module of results) {
     for(let test of module.tests) {
       out.push(`# ${test.name}`);
+      //out.push(`# ${test.duration * 1000}ms`)
       for(let assertion of test.assertions) {
         switch(assertion.type) {
           case 'pass':

@@ -44,9 +44,13 @@ let harness = {
   run() {
     for(let test of this.tests) {
       try {
+        const start = Date.now();
+        const results = test.run();
+        const end = Date.now();
         this.results.push({
           name: test.name,
-          assertions: test.run(),
+          assertions: results,
+          duration: end - start,
         });
       } catch(error) {
         console.log('Harness.run');
