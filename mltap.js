@@ -59,6 +59,20 @@ function asTAP(results) {
     pad = pad || ' ';
     return ' '.repeat(num) + str;
   }
+  /**
+   * @param {any} value
+   * @returns string YAMLish string
+   */
+  function yaml(value) {
+    if('object' === typeof value) {
+      return yaml(value.toString());
+    }
+    if('string' === typeof value) {
+      return `"${value.replace(/"/g, '\\"')}"`;
+    }
+    return value;
+  }
+
   let counter = 0;
   const out = ['TAP version 13'];
   for(let module of results) {
