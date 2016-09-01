@@ -64,3 +64,24 @@ not ok 7 Planned for 25 assertions, got 2
 
 1..7
 ```
+
+### Development Set-Up
+
+```shell
+git clone https://github.com/jmakeig/mltap.git && cd mltap
+npm install
+# Copies the MarkLogic library modules to $ML_HOME/Modules/mltap
+# You’ll need to run this anytime the MarkLogic modules change
+# This should theoretically work with a modules database in the future
+npm config  # Requires MarkLogic running (defaults to admin:admin@localhost:8000)
+npm test
+```
+
+#### For VSCode
+
+Install Node.js types to enable code completions:
+
+```shell
+npm install -g typings
+typings install dt~node --global
+```
