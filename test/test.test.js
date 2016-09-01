@@ -1,11 +1,11 @@
 'use strict';
 
 const test = require('tape-catch');
-const exec = require('./exec');
+const remote = require('../marklogic-remote')(/* connection */);
 
 test('Throws an error after some assertions pass', (assert) => {
   assert.plan(1);
-  exec('test/test.test.sjs')
+  remote('test/test.test.sjs')
     .then((tap) => {
       //assert.comment(tap.length);
       assert.true(true, '’Tis true');

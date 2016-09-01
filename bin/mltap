@@ -19,43 +19,27 @@ Options:
 
 const opts = require('docopt').docopt(doc);
 
-const marklogic = require('marklogic');
+// TODO: Parameterize me
 const conn = {
-  host:     'localhost',  // TODO: Parameterize me
-  port:     '8000',       // TODO: Parameterize me
-  user:     'tester',     // TODO: Parameterize me
-  password: 'tester',     // TODO: Parameterize me 
-  authType: 'digest',     // TODO: Parameterize me
+  host:     'localhost',
+  port:     '8000',
+  user:     'tester',
+  password: 'tester', 
+  authType: 'digest',
 }
-const client = marklogic.createDatabaseClient(conn);
 
-/*
- * Assumes external variables:
- *   Array<string> tests - The paths to the tests, relative to the root
- *   string root - The root context to resolve module imports. Assumes file system
- */
-const bootstrap = `require('/mltap/mltap')(tests, root, 0);`;
+const remote = require('../marklogic-remote')(conn);
 
-// TODO: Figure out 
-client.eval(bootstrap, 
-  {
-    root: process.cwd(), //'/Users/jmakeig/Workspaces/tmptest', 
-    tests: opts['<test>'], //['test/test.test.sjs', 'test/lib.test.sjs',]
-  })
-  .result(
-    response => {
-      process.stdout.write(response[0].value + '\n');
-      process.exit(0);
-    },
-    error => { 
-      // console.dir(error);
-      if('SEC-PRIV' === error.body.errorResponse.messageCode) {
-        process.stderr.write('Are you sure you configured the security settings? ');
-        process.stderr.write('mltap requires roles, amps, and privileges.\n');
-        process.stderr.write('\nFrom where you downloaded mltap, run:\n');
-        process.stderr.write('    gradle mlDeploy\n');
-      }
-      process.stderr.write('\n' + error.body.errorResponse.message + '\n'); 
-      process.exit(1); 
+remote(opts['<test>'], process.cwd())
+  .then(tap => process.stdout.write(tap + '\n'))
+  .catch(error => { 
+    // console.dir(error);
+    if('SEC-PRIV' === error.body.errorResponse.messageCode) {
+      process.stderr.write('Are you sure you configured the security settings? ');
+      process.stderr.write('mltap requires roles, amps, and privileges.\n');
+      process.stderr.write('\nFrom where you downloaded mltap, run:\n');
+      process.stderr.write('    gradle mlDeploy\n');
     }
-  );
+    process.stderr.write('\n' + error.body.errorResponse.message + '\n'); 
+    process.exit(1); 
+  });
