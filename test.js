@@ -125,6 +125,7 @@ Test.prototype = {
     this.outcomes.push({
       type: 'error', 
       message: error.message, 
+      actual: typeName(error),
       at: stack[0].toString(),
       stack: stack 
     });
@@ -213,8 +214,21 @@ Test.prototype = {
         actual = error;
       }
     }
-    this.fail(message, expected, actual, StackTrace.parse(actual));
+    const frame = StackTrace.parse(actual)[0];
+    this.fail(message, typeName(expected), typeName(actual), `${frame.fileName}:${frame.lineNumber}:${frame.columnNumber}`);
   },
+}
+
+// TODO: Extract this to a util module
+function typeName(obj) {
+  if(null === obj) {
+    return 'null';
+  } else if('function' === typeof obj) {
+    return String(obj).split(' ')[1].replace(/\(\)$/, '');
+  } else if(obj && obj.constructor) {
+    return typeName(obj.constructor);
+  }
+  return typeof obj;
 }
 
 function test(name, impl) {
