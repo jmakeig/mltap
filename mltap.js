@@ -59,11 +59,26 @@ function asTAP(results) {
     pad = pad || ' ';
     return ' '.repeat(num) + str;
   }
+  /**
+   * @param {any} value
+   * @returns string YAMLish string
+   */
+  function yaml(value) {
+    if('object' === typeof value) {
+      return yaml(value.toString());
+    }
+    if('string' === typeof value) {
+      return `"${value.replace(/"/g, '\\"')}"`;
+    }
+    return value;
+  }
+
   let counter = 0;
   const out = ['TAP version 13'];
   for(let module of results) {
     for(let test of module.tests) {
       out.push(`# ${test.name}`);
+      //out.push(`# ${test.duration * 1000}ms`)
       for(let assertion of test.assertions) {
         switch(assertion.type) {
           case 'pass':
@@ -72,25 +87,25 @@ function asTAP(results) {
           case 'fail':
             out.push(`not ok ${++counter} ${assertion.message}`);
             out.push(indent('---', 2));
-              out.push(indent(`operator: ok`, 4));
-              out.push(indent(`expected: ${assertion.expected}`, 4));
-              out.push(indent(`actual: ${assertion.actual}`, 4));
-              out.push(indent(`at: ${assertion.at}`, 4));
+              out.push(indent(`operator: ${assertion.operator || 'TODO'}`, 4));
+              out.push(indent(`expected: ${yaml(assertion.expected)}`, 4));
+              out.push(indent(`actual: ${yaml(assertion.actual)}`, 4));
+              out.push(indent(`at: ${yaml(assertion.at)}`, 4));
             out.push(indent('...', 2));
             break;
           case 'error':
             out.push(`not ok ${++counter} Error: ${assertion.message}`);
             // <https://github.com/substack/tape/blob/master/lib/results.js#L139-L166>
             out.push(indent('---', 2));
-              out.push(indent(`operator: ${assertion.type}`, 4));
-              out.push(indent(`actual: ${assertion.actual}`, 4));
+              out.push(indent(`operator: ${assertion.operator || 'TODO'}`, 4));
+              out.push(indent(`actual: ${yaml(assertion.actual)}`, 4));
               if(assertion.stack) {
                 let frame = assertion.stack[0];
-                out.push(indent(`at: ${frame.functionName} (${frame.fileName}:${frame.lineNumber}:${frame.columnNumber})`, 4));
+                out.push(indent(`at: "${frame.functionName} (${frame.fileName}:${frame.lineNumber}:${frame.columnNumber})"`, 4));
                 out.push(indent('stack: |-', 4)); // YAML: Use |- to strip final line break in a multi-line value
                 out.push(indent(`Error: ${assertion.message}`, 6));
                 for(let frame of assertion.stack) {
-                  out.push(indent(`at ${frame.functionName} (${frame.fileName}:${frame.lineNumber}:${frame.columnNumber})`, 10));
+                  out.push(indent(yaml(`at ${frame.functionName} (${frame.fileName}:${frame.lineNumber}:${frame.columnNumber})`), 10));
                 }
               }
             out.push(indent('...', 2));
