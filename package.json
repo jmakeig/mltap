@@ -11,7 +11,8 @@
     "test-pretty": "tape test/*.test.js | tap-notify | tap-diff",
     "test-marklogic": "bin/mltap test/*.test.sjs",
     "test-marklogic-pretty": "bin/mltap test/*.test.sjs | tap-notify | tap-diff",
-    "config": "gradle mlDeploy && mkdir -p ~/Library/MarkLogic/Modules/mltap; cp -R mltap.js test.js lib ~/Library/MarkLogic/Modules/mltap/"
+    "config": "gradle mlDeploy && npm deploy",
+    "deploy": "mkdir -p ~/Library/MarkLogic/Modules/mltap; cp -R mltap.js test.js lib ~/Library/MarkLogic/Modules/mltap/"
   },
   "repository": {
     "type": "git",
