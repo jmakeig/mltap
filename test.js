@@ -217,6 +217,14 @@ Test.prototype = {
     const frame = StackTrace.parse(actual)[0];
     this.fail(message, typeName(expected), typeName(actual), `${frame.fileName}:${frame.lineNumber}:${frame.columnNumber}`);
   },
+  deepEqual(actual, expected, message) {
+    const deepEqual = require('/mltap/lib/deep-equal/deep-equal');
+    if(deepEqual(actual, expected, { strict: true })) {
+      this.pass(message, 'deepEqual');
+    } else {
+      this.fail(message, expected, actual, StackTrace.get()[1]);
+    }
+  },
 }
 
 // TODO: Extract this to a util module

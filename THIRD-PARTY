@@ -1,3 +1,7 @@
 stack-trace
 <https://github.com/felixge/node-stack-trace>
 Copyright (c) 2011 Felix Geisendörfer (felix@debuggable.com)
+
+node-deep-equal
+<https://github.com/substack/node-deep-equal>
+MIT
