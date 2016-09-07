@@ -14,10 +14,11 @@ before_install:
   - echo 'America/Los_Angeles' | sudo tee /etc/timezone
   - sudo dpkg-reconfigure --frontend noninteractive tzdata
 install:
+  - pwd
   - nvm install $NODE_VERSION
-  - sudo /home/travis/.nvm/versions/node/v6.5.0/bin/npm help
-#  - ./scripts/install-dependencies.sh
+  - ./scripts/install-dependencies.sh
   - npm install
-  - sudo npm run config
+  - if [ -z ${ML_HOME+x} ]; then echo 'The environment variable ML_HOME is empty or missing' && exit 1; else sudo mkdir -p "$ML_HOME/Modules/mltap"; sudo cp -R mltap.js test.js lib "$ML_HOME/Modules/mltap/"; fi
+  - npm run config
 script:
   - npm test
