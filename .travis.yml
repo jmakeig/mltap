@@ -3,14 +3,20 @@ branches:
   - master
   - develop
   - travis
-language: node_js
-node_js:
-  - "6"
+# <https://github.com/travis-ci/travis-ci/issues/3827#issuecomment-98114873>
+language: java
+jdk:
+  - oraclejdk8
 sudo: true
+env:
+  - NODE_VERSION=6.5
 before_install:
   - echo 'America/Los_Angeles' | sudo tee /etc/timezone
   - sudo dpkg-reconfigure --frontend noninteractive tzdata
 install:
+  - nvm install $NODE_VERSION
   - ./scripts/install-dependencies.sh
+  - npm install
+  - npm run config
 script:
-  - npm install && npm config
+  - npm test
