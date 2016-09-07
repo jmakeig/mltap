@@ -1,4 +1,4 @@
-## mltap
+## mltap [![Build Status](https://travis-ci.org/jmakeig/mltap.svg?branch=develop)](https://travis-ci.org/jmakeig/mltap)
 
 A (partial) implementation of the [tape](https://github.com/substack/tape) API. This allows you to run the same tests in Node.js or MarkLogic with no modifications to the test code. (Currently you do have to adjust the `require` imports at the start of each test to run them in MarkLogic).
 `mltap` produces [TAP](https://testanything.org) output so you can use it the other tools that can consume TAP. 
