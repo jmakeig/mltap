@@ -12,3 +12,5 @@ before_install:
   - sudo dpkg-reconfigure --frontend noninteractive tzdata
 install:
   - ./scripts/install-dependencies.sh
+script:
+  - npm install && npm config
