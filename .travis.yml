@@ -18,6 +18,7 @@ install:
   - nvm install $NODE_VERSION
   - ./scripts/install-dependencies.sh
   - npm install
+# TRAVIS_BUILD_DIR=/home/travis/build/jmakeig/mltap
   - if [ -z ${ML_HOME+x} ]; then echo 'The environment variable ML_HOME is empty or missing' && exit 1; else sudo mkdir -p "$ML_HOME/Modules/mltap"; sudo cp -R mltap.js test.js lib "$ML_HOME/Modules/mltap/"; fi
   - npm run config
 script:
