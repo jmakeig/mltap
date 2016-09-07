@@ -15,9 +15,9 @@ before_install:
   - sudo dpkg-reconfigure --frontend noninteractive tzdata
 install:
   - nvm install $NODE_VERSION
+  - echo $(type -P npm)
 #  - ./scripts/install-dependencies.sh
   - npm install
-  - type -P npm
   - sudo npm run config
 script:
   - npm test
