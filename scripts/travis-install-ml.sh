@@ -45,7 +45,8 @@ else
   # if the user passed a day string as a param then use it instead
   test $1 && day=$1
   # make a version number out of the date
-  ver="8.0-$day"
+  #ver="8.0-$day"
+  ver="9.0-$day"
 
   echo "********* Downloading MarkLogic nightly $ver"
 
@@ -56,8 +57,10 @@ else
   suff="_amd64.deb"
   fnamedeb=$fnamedeb$suff
 
-  url="https://root.marklogic.com/nightly/builds/linux64/rh6-intel64-80-test-1.marklogic.com/b8_0/pkgs.$day/$fname"
-
+  #url="https://root.marklogic.com/nightly/builds/linux64/rh6-intel64-80-test-1.marklogic.com/b8_0/pkgs.$day/$fname"
+  url="https://root.marklogic.com/nightly/builds/linux64/rh6v-intel64-90-test-1.marklogic.com/HEAD/pkgs.$day/MarkLogic-RHEL6-$fname.x86_64.rpm"
+  echo "$url"
+  
   status=$(curl -k --anyauth -u $MLBUILD_USER:$MLBUILD_PASSWORD --head --write-out %{http_code} --silent --output /dev/null $url)
   if [[ $status = 200 ]]; then
     successOrExit curl -k --anyauth -u $MLBUILD_USER:$MLBUILD_PASSWORD -o ./$fname $url
