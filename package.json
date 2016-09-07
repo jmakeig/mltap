@@ -11,8 +11,9 @@
     "test-pretty": "tape test/*.test.js | tap-notify | tap-diff",
     "test-marklogic": "bin/mltap test/*.test.sjs",
     "test-marklogic-pretty": "bin/mltap test/*.test.sjs | tap-notify | tap-diff",
-    "config": "gradle mlDeploy && npm deploy",
-    "deploy": "mkdir -p ~/Library/MarkLogic/Modules/mltap; cp -R mltap.js test.js lib ~/Library/MarkLogic/Modules/mltap/"
+    "config": "gradle mlDeploy",
+    "deploy": "npm run env && mkdir -p \"$ML_HOME/Modules/mltap\"; cp -R mltap.js test.js lib \"$ML_HOME/Modules/mltap/\"",
+    "env": "if [ -z ${ML_HOME+x} ]; then echo 'The environment variable ML_HOME is empty or missing' && exit 1; else echo $ML_HOME; fi"
   },
   "repository": {
     "type": "git",
@@ -32,6 +33,7 @@
   "homepage": "https://github.com/jmakeig/mltap#readme",
   "devDependencies": {
     "tap-out": "^1.4.2",
+    "tap-parser": "^2.2.1",
     "tape": "^4.6.0",
     "tape-catch": "^1.0.6"
   },
