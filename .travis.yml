@@ -17,6 +17,6 @@ install:
   - nvm install $NODE_VERSION
   - ./scripts/install-dependencies.sh
   - npm install
-  - npm run config
+  - sudo npm run config
 script:
   - npm test
