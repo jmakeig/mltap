@@ -15,7 +15,7 @@ before_install:
   - sudo dpkg-reconfigure --frontend noninteractive tzdata
 install:
   - nvm install $NODE_VERSION
-  - echo $(type -P npm)
+  - sudo /home/travis/.nvm/versions/node/v6.5.0/bin/npm help
 #  - ./scripts/install-dependencies.sh
   - npm install
   - sudo npm run config
