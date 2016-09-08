@@ -22,7 +22,7 @@ Then from within the project you’d like to test,
 mltap test/*.test.sjs
 ```
 
-Behind the scenes, `mltap` will run each of local `*.test.sjs` modules against the target MarkLogic JavaScript environemnt. `mltap` collates the results and produces a summary of the passed and failed tests in [TAP](https://testanything.org) format to stdout. You can use any TAP consumer to further process the output. For example, [tap-diff](https://www.npmjs.com/package/tap-diff) pretty prints TAP on the command-line.
+Behind the scenes, `mltap` will run each of local the `*.test.sjs` modules against the target MarkLogic JavaScript environemnt. `mltap` collates the results and produces a summary of the passed and failed tests in [TAP](https://testanything.org) format to stdout. You can use any TAP consumer to further process the output. For example, [tap-diff](https://www.npmjs.com/package/tap-diff) pretty prints TAP on the command-line.
 
 ```shell
 npm install -g tap-diff
