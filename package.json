@@ -6,6 +6,9 @@
   "directories": {
     "test": "test"
   },
+  "bin": {
+    "mltap": "bin/mltap"
+  },
   "scripts": {
     "test": "tape test/*.test.js",
     "test-pretty": "tape test/*.test.js | tap-notify | tap-diff",
