@@ -1,7 +1,36 @@
 ## mltap [![Build Status](https://travis-ci.org/jmakeig/mltap.svg?branch=develop)](https://travis-ci.org/jmakeig/mltap)
 
-A (partial) implementation of the [tape](https://github.com/substack/tape) API. This allows you to run the same tests in Node.js or MarkLogic with no modifications to the test code. (Currently you do have to adjust the `require` imports at the start of each test to run them in MarkLogic).
-`mltap` produces [TAP](https://testanything.org) output so you can use it the other tools that can consume TAP. 
+`mltap` is a **unit testing framework for [MarkLogic](https://developer.marklogic.com/)**. It includes a test harness for running tests in Server-Side JavaScript in MarkLogic, an assertion library, and a Node.js-based command-line wrapper. 
+
+`mltap` (partially) implements the [tape](https://github.com/substack/tape) API, a popular Node.js test framework. This allows you to run the *same* tests in Node.js, modern browsers, and MarkLogic with no modifications to the test code. 
+
+`mltap` produces standard [TAP](https://testanything.org) output so you can use it the other tools that can consume TAP, for example, for continuous integration, <acronym title="Integrated Development Environment">IDE<acronym> integration, or reporting.
+
+### Getting Started
+
+First, install the libraries and the command-line interface, 
+
+```shell
+npm install -g mltap
+```
+
+This installs the the command-line interface on your `$PATH` and configures MarkLogic with the necessary library modules and security settings. You’ll only need to do this once.
+
+Then from within the project you’d like to test,
+
+```shell
+mltap test/*.test.sjs
+```
+
+Behind the scenes, `mltap` will run each of local `*.test.sjs` modules against the target MarkLogic JavaScript environemnt. `mltap` collates the results and produces a summary of the passed and failed tests in [TAP](https://testanything.org) format to stdout. You can use any TAP consumer to further process the output. For example, [tap-diff](https://www.npmjs.com/package/tap-diff) pretty prints TAP on the command-line.
+
+```shell
+npm install -g tap-diff
+mltap test/*.test.sjs | tap-diff
+```
+
+### Example Test and TAP Output
+
 
 ```js
 'use strict';
@@ -79,7 +108,7 @@ npm test
 
 #### For VSCode
 
-Install Node.js types to enable code completions:
+Install Node.js TypeScript types to enable code completion,
 
 ```shell
 npm install -g typings
