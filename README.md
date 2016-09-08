@@ -4,7 +4,7 @@
 
 `mltap` (partially) implements the [tape](https://github.com/substack/tape) API, a popular Node.js test framework. This allows you to run the *same* tests in Node.js, modern browsers, and MarkLogic with no modifications to the test code. 
 
-`mltap` produces standard [TAP](https://testanything.org) output so you can use it the other tools that can consume TAP, for example, for continuous integration, <acronym title="Integrated Development Environment">IDE<acronym> integration, or reporting.
+`mltap` produces standard [TAP](https://testanything.org) output so you can use it in other tools that can consume TAP, for example, for continuous integration, IDE integration, or reporting.
 
 ### Getting Started
 
