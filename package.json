@@ -17,7 +17,8 @@
     "config": "gradle mlDeploy",
     "deploy": "npm run env && mkdir -p \"$ML_HOME/Modules/mltap\"; cp -R mltap.js test.js lib \"$ML_HOME/Modules/mltap/\"",
     "setup": "npm deploy && npm config",
-    "env": "if [ -z ${ML_HOME+x} ]; then echo 'The environment variable ML_HOME is empty or missing' && exit 1; else echo $ML_HOME; fi"
+    "env": "if [ -z ${ML_HOME+x} ]; then echo 'The environment variable ML_HOME is empty or missing' && exit 1; else echo $ML_HOME; fi",
+    "install": "npm setup"
   },
   "repository": {
     "type": "git",
