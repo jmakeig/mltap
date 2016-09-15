@@ -14,9 +14,9 @@ test('assert.throws()', (assert) => {
       assert.equal(tap.fail, 1, 'Two total tests fail');
       const failure = tap.failures[0];
       assert.skip(failure.diag.operator, 'throws', 'Operator is throws');
-      assert.equal(failure.diag.expected, 'ReferenceError');
-      assert.equal(failure.diag.actual, 'TypeError');
-      assert.equal(failure.diag.at, '/test/throws.test.sjs:17:19', 'Failure location')
+      assert.deepEqual(failure.diag.expected, [{'Function': 'ReferenceError'}]);
+      assert.deepEqual(failure.diag.actual, [{TypeError: 'Thrown TypeError'}]);
+      assert.equal(failure.diag.at, '/test/throws.test.sjs:20:19', 'Failure location');
     })
     .catch(error => assert.fail(error));
 });

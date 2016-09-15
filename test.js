@@ -125,7 +125,7 @@ Test.prototype = {
     this.outcomes.push({
       type: 'error', 
       message: error.message, 
-      actual: typeName(error),
+      actual: error,
       at: stack[0].toString(),
       stack: stack 
     });
@@ -185,10 +185,12 @@ Test.prototype = {
     );
   },
   equal(actual, expected, message) {
-    return this.true(
-      expected === actual, 
-      message
-    );
+    if(actual === expected) {
+      this.pass(message);
+    } else {
+      console.log(StackTrace.get()[1]);
+      this.fail(message, expected, actual, StackTrace.get()[1]);
+    }
   },
 
   /**
@@ -215,7 +217,7 @@ Test.prototype = {
       }
     }
     const frame = StackTrace.parse(actual)[0];
-    this.fail(message, typeName(expected), typeName(actual), `${frame.fileName}:${frame.lineNumber}:${frame.columnNumber}`);
+    this.fail(message, expected, actual, `${frame.fileName}:${frame.lineNumber}:${frame.columnNumber}`);
   },
   deepEqual(actual, expected, message) {
     const deepEqual = require('/mltap/lib/deep-equal/deep-equal');
