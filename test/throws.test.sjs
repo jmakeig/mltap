@@ -2,7 +2,7 @@
 
 const test = require('./is-marklogic') ? require('/mltap/test') : require('tape-catch');
 
-test('assert.throws() passes', (assert) => {
+test('assert.throws()', (assert) => {
   assert.throws(
     () => { throw new TypeError('Thrown TypeError'); }, 
     TypeError, 

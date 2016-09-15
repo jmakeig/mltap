@@ -35,7 +35,7 @@ function newInstance(Type, ...args) {
 /**
  * Singleton
  */
-let harness = {
+const harness = {
   tests: new Array(),
   results: new Array(),
   register(name, impl) {
@@ -53,7 +53,7 @@ let harness = {
           duration: end - start,
         });
       } catch(error) {
-        console.log('Harness.run');
+        // console.log('Harness.run');
         throw error;
       }
     }
@@ -121,7 +121,7 @@ Test.prototype = {
    */
   error(error, at) {
     const stack = StackTrace.parse(error);
-    console.log(error.message);
+    // console.log(error.message);
     this.outcomes.push({
       type: 'error', 
       message: error.message, 

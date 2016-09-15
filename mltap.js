@@ -27,7 +27,8 @@ function runner(tests, root, modules) {
     modules: modules || 0,
     ignoreAmps: false,
   }
-  for(let test of tests) {
+  for(const test of tests) {
+    console.log(`mltap: Running test ${test} from ${root}`)
     let harness = fn.head(xdmp.invoke(test, null, ctx));
     harness.run();
     results.push(
