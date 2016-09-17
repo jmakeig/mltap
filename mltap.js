@@ -1,5 +1,7 @@
 'use strict';
 
+const inspect = require('/mltap/lib/object-inspect');
+
 // const ctx = { modules: 0, root: '/Users/jmakeig/Workspaces/mltap' };
 
 // const tests = [
@@ -42,10 +44,10 @@ function runner(tests, root, modules) {
 }
 
 /**
- * 
+ * Serialize as TAP
  * 
  * @param {Array} results
- * @returns
+ * @returns string
  */
 function asTAP(results) {
   /**
@@ -61,17 +63,30 @@ function asTAP(results) {
     return ' '.repeat(num) + str;
   }
   /**
+   * Encode as YAML
+   * 
    * @param {any} value
    * @returns string YAMLish string
    */
   function yaml(value) {
-    if('object' === typeof value) {
-      return yaml(value.toString());
-    }
     if('string' === typeof value) {
-      return `"${value.replace(/"/g, '\\"')}"`;
+      if(isMultilineString(value)) {
+        return JSON.stringify(value);
+      }
+      return `'${value}'`;
     }
-    return value;
+    return inspect(value);
+  }
+
+  /**
+   * Whether a string contains line breaks.
+   * 
+   * @param {any} str Any string
+   * @returns boolean `false` for non-strings too
+   */
+  function isMultilineString(str) {
+    const re = /[\n\r]/g;
+    return 'string' === typeof str && re.test(str);
   }
 
   let counter = 0;
@@ -80,7 +95,7 @@ function asTAP(results) {
     for(let test of module.tests) {
       out.push(`# ${test.name}`);
       //out.push(`# ${test.duration * 1000}ms`)
-      for(let assertion of test.assertions) {
+      for(const assertion of test.assertions) {
         switch(assertion.type) {
           case 'pass':
             out.push(`ok ${++counter} ${assertion.message}`);
