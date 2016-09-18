@@ -89,32 +89,6 @@ Test.prototype = {
     return this.outcomes;
   },
   /**
-   * 
-   * 
-   * @param {string} message
-   * @param {string} operator
-   */
-  pass(message, operator) {
-    this.outcomes.push({type: 'pass', operator: operator, message: message});
-  },
-  /**
-   * 
-   * 
-   * @param {string} [message]
-   * @param {any} [expected]
-   * @param {any} [actual]
-   * @param {string} [at]
-   */
-  fail(message, expected, actual, at) {
-    this.outcomes.push({
-      type: 'fail', 
-      message: message,
-      expected: expected,
-      actual: actual,
-      at: at,
-    });
-  },
-  /**
    * Reports an unexpected error in the test.
    * 
    * @param {Error} error
@@ -139,7 +113,7 @@ Test.prototype = {
   // Only called when there is *no* plan
   end() {
     if('number' === typeof this.planned) {
-      this.fail(`Planned for ${this.planned}, but ended`, this.planned, this.outcomes.length);
+      this.assert(false, 'plan', `Planned for ${this.planned}, but ended`, this.outcomes.length, this.planned);
     }
     this.isEnded = true;
   },
@@ -147,50 +121,54 @@ Test.prototype = {
     if(this.isErrored) return;
     if('number' === typeof this.planned) {
       if(this.outcomes.length !== this.planned) {
-        this.fail(
-          `Planned for ${this.planned} assertions, got ${this.outcomes.length}`, 
-          this.planned, 
-          this.outcomes.length, 
-          StackTrace.get()[1]
-        );
+        assert(false, 'plan', `Planned for ${this.planned} assertions, got ${this.outcomes.length}`, this.outcomes.length, this.planned);
       }
     } else if(!this.isEnded) {
-      this.fail(
-        `Didn’t call end after ${this.outcomes.length} assertions`, 
-        true, 
-        false,
-        StackTrace.get()[1]
-      );
+      this.assert(false, 'plan', `Didn’t call end after ${this.outcomes.length} assertions`, this.outcomes.length);
     }
   },
   //////////// Assertions //////////// 
-  true(actual, message) {
-    // TODO: Check this.isEnded
-    message = message || `false`;
-    if(true === actual) {
-      this.pass(message)
+  /**
+   * Internal assertion implementation. This is meant to be
+   * called only from within this instance.
+   * 
+   * @param {boolean} ok       Whether the assertion is true
+   * @param {string} operator  Type of assertion
+   * @param {string} message   User message
+   * @param {any} actual       Actual value
+   * @param {[any]} expected   Expected value
+   * @param {[string]} at
+   */
+  assert(ok, operator, message, actual, expected, at) {
+    const report = {
+      operator: operator, 
+      message: message,
+    }
+    if(ok) {
+      this.outcomes.push(
+        Object.assign(report, {
+          type: 'pass', 
+        })
+      );
     } else {
-      this.fail(
-        message, 
-        true, 
-        actual,
-        StackTrace.get()[1] // 0 is test.js 
+      this.outcomes.push(
+        Object.assign(report, {
+          type: 'fail', 
+          actual: actual,
+          expected: expected,
+          at: at || StackTrace.get()[2], // Will this actually work?
+        })
       );
     }
   },
+  true(actual, message) {
+    this.assert(Boolean(actual), 'true', message || 'true', actual);
+  },
   false(actual, message) {
-    return this.true(
-      !actual, 
-      message
-    );
+    this.assert(!Boolean(actual), 'false', message || 'false', actual);
   },
   equal(actual, expected, message) {
-    if(actual === expected) {
-      this.pass(message);
-    } else {
-      console.log(StackTrace.get()[1]);
-      this.fail(message, expected, actual, StackTrace.get()[1]);
-    }
+    this.assert(actual === expected, 'equal', message || 'equal', actual, expected);
   },
 
   /**
@@ -210,22 +188,24 @@ Test.prototype = {
       fn();
     } catch (error) {
       if(error instanceof expected) {
-        this.pass(message, 'throws');
+        this.assert(true, 'throws', message || 'throws');
         return;
       } else {
         actual = error;
       }
     }
     const frame = StackTrace.parse(actual)[0];
-    this.fail(message, expected, actual, `${frame.fileName}:${frame.lineNumber}:${frame.columnNumber}`);
+    this.assert(false, 'throws', 
+      message || 'throws', 
+      actual, expected, 
+      `${frame.fileName}:${frame.lineNumber}:${frame.columnNumber}`);
   },
   deepEqual(actual, expected, message) {
     const deepEqual = require('/mltap/lib/deep-equal/deep-equal');
-    if(deepEqual(actual, expected, { strict: true })) {
-      this.pass(message, 'deepEqual');
-    } else {
-      this.fail(message, expected, actual, StackTrace.get()[1]);
-    }
+    this.assert(deepEqual(actual, expected, { strict: true }), 
+      'deepEqual', 
+      message || 'deepEqual', 
+      actual, expected);
   },
 }
 
