@@ -1,6 +1,11 @@
 .gradle
 .tmp
 build
+
+# npm
 node_modules
 npm-debug.log
+
+# VSCode settings
 typings
+jsconfig.json
