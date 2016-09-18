@@ -13,7 +13,7 @@ test('assert.throws()', (assert) => {
       assert.equal(tap.pass, 2, 'Two total tests pass');
       assert.equal(tap.fail, 1, 'Two total tests fail');
       const failure = tap.failures[0];
-      assert.skip(failure.diag.operator, 'throws', 'Operator is throws');
+      assert.equal(failure.diag.operator, 'throws', 'Operator is throws');
       assert.deepEqual(failure.diag.expected, [{'Function': 'ReferenceError'}]);
       assert.deepEqual(failure.diag.actual, [{TypeError: 'Thrown TypeError'}]);
       assert.equal(failure.diag.at, '/test/throws.test.sjs:20:19', 'Failure location');

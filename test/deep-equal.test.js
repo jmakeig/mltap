@@ -5,7 +5,7 @@ const remote = require('../marklogic-remote')(/* connection */);
 const parseTAP = require('../lib/tap-helpers').parseTAP;
 
 test('assert.deepEqual()', (assert) => {
-  assert.plan(6);
+  assert.plan(7);
   remote('test/deep-equal.test.sjs') // CHANGE ME
     .then((tap) => parseTAP(tap))
     .then(tap => {
@@ -16,7 +16,7 @@ test('assert.deepEqual()', (assert) => {
       assert.skip(failure.diag.expected, '?'); // Depends on #19
       assert.skip(failure.diag.actual, '?'); // Depends on #19
       assert.skip(failure.diag.at, '/test/deep-equal.test.sjs:7:10'); // Depends on #20
-
+      assert.equal(failure.diag.operator, 'deepEqual', 'Operator is deepEqual');
     })
     .catch(error => assert.fail(error));
 });

@@ -103,7 +103,7 @@ function asTAP(results) {
           case 'fail':
             out.push(`not ok ${++counter} ${assertion.message}`);
             out.push(indent('---', 2));
-              out.push(indent(`operator: ${assertion.operator || 'TODO'}`, 4));
+              out.push(indent(`operator: ${assertion.operator}`, 4));
               out.push(indent(`expected: ${yaml(assertion.expected)}`, 4));
               out.push(indent(`actual: ${yaml(assertion.actual)}`, 4));
               out.push(indent(`at: ${yaml(assertion.at)}`, 4));
@@ -113,7 +113,7 @@ function asTAP(results) {
             out.push(`not ok ${++counter} Error: ${assertion.message}`);
             // <https://github.com/substack/tape/blob/master/lib/results.js#L139-L166>
             out.push(indent('---', 2));
-              out.push(indent(`operator: ${assertion.operator || 'TODO'}`, 4));
+              out.push(indent(`operator: ${assertion.operator}`, 4));
               out.push(indent(`actual: ${yaml(assertion.actual)}`, 4));
               if(assertion.stack) {
                 let frame = assertion.stack[0];
