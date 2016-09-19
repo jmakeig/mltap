@@ -1,6 +1,6 @@
 'use strict';
 
-const inspect = require('/mltap/_modules/object-inspect/index.js');
+const inspect = require('/mltap/lib/format');
 
 // const ctx = { modules: 0, root: '/Users/jmakeig/Workspaces/mltap' };
 
@@ -68,14 +68,14 @@ function asTAP(results) {
    * @param {any} value
    * @returns string YAMLish string
    */
-  function yaml(value) {
-    if('string' === typeof value) {
-      if(isMultilineString(value)) {
-        return JSON.stringify(value);
+  function yaml(value, inheritedIndent) {
+    const opts = { 
+      pad: { 
+        num: inheritedIndent + 4, 
+        hanging: false,
       }
-      return `'${value}'`;
-    }
-    return inspect(value);
+    };
+    return inspect(value, opts);
   }
 
   /**
@@ -104,9 +104,9 @@ function asTAP(results) {
             out.push(`not ok ${++counter} ${assertion.message}`);
             out.push(indent('---', 2));
               out.push(indent(`operator: ${assertion.operator}`, 4));
-              out.push(indent(`expected: ${yaml(assertion.expected)}`, 4));
-              out.push(indent(`actual: ${yaml(assertion.actual)}`, 4));
-              out.push(indent(`at: ${yaml(assertion.at)}`, 4));
+              out.push(indent(`expected: |-\n${yaml(assertion.expected, 4)}`, 4));
+              out.push(indent(`actual: |-\n${yaml(assertion.actual, 4)}`, 4));
+              out.push(indent(`at: ${assertion.at}`, 4));
             out.push(indent('...', 2));
             break;
           case 'error':
@@ -114,14 +114,14 @@ function asTAP(results) {
             // <https://github.com/substack/tape/blob/master/lib/results.js#L139-L166>
             out.push(indent('---', 2));
               out.push(indent(`operator: ${assertion.operator}`, 4));
-              out.push(indent(`actual: ${yaml(assertion.actual)}`, 4));
+              out.push(indent(`actual: |-\n${yaml(assertion.actual, 4)}`, 4));
               if(assertion.stack) {
                 let frame = assertion.stack[0];
                 out.push(indent(`at: "${frame.functionName} (${frame.fileName}:${frame.lineNumber}:${frame.columnNumber})"`, 4));
                 out.push(indent('stack: |-', 4)); // YAML: Use |- to strip final line break in a multi-line value
                 out.push(indent(`Error: ${assertion.message}`, 6));
                 for(let frame of assertion.stack) {
-                  out.push(indent(yaml(`at ${frame.functionName} (${frame.fileName}:${frame.lineNumber}:${frame.columnNumber})`), 10));
+                  out.push(indent(`at ${frame.functionName} (${frame.fileName}:${frame.lineNumber}:${frame.columnNumber})`, 10));
                 }
               }
             out.push(indent('...', 2));
