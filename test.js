@@ -1,6 +1,6 @@
 'use strict';
 
-const StackTrace = require('lib/stack-trace');
+const StackTrace = require('/mltap/_modules/stack-trace/lib/stack-trace.js');
 
 /**
  * CAUTION: This is a total hack.
@@ -201,7 +201,7 @@ Test.prototype = {
       `${frame.fileName}:${frame.lineNumber}:${frame.columnNumber}`);
   },
   deepEqual(actual, expected, message) {
-    const deepEqual = require('/mltap/lib/deep-equal/deep-equal');
+    const deepEqual = require('/mltap/_modules/deep-equal/index.js');
     this.assert(deepEqual(actual, expected, { strict: true }), 
       'deepEqual', 
       message || 'deepEqual', 
