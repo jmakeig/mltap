@@ -76,12 +76,8 @@ function Test(name, impl) {
 }
 Test.prototype = {
   run() {
-    try {
-      this.impl(this);
-    } catch(error) {
-      this.error(error);
-      this.isErrored = true;
-    }
+    console.log('About to run…');
+    this.impl(this);
     this.complete();
     return this.report();
   },
@@ -206,6 +202,12 @@ Test.prototype = {
       'deepEqual', 
       message || 'deepEqual', 
       actual, expected);
+  },
+  fail(message) {
+    this.assert(false, message || 'fail');
+  },
+  pass(message) {
+    this.assert(true, message || 'pass');
   },
 }
 

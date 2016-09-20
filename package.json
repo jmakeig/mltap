@@ -38,8 +38,7 @@
   "devDependencies": {
     "tap-out": "^1.4.2",
     "tap-parser": "^3.0.3",
-    "tape": "^4.6.0",
-    "tape-catch": "^1.0.6"
+    "tape": "^4.6.0"
   },
   "optionalDependencies": {
     "faucet": "0.0.1",

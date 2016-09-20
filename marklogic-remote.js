@@ -37,10 +37,9 @@ function remote(tests, root = process.cwd()) {
         tests: tests,
         root: root, 
       })
-      .result(response => {
-          resolve(response[0].value);
-        },
-        error => { reject(error); } 
+      .result(
+        response => resolve(response[0].value),
+        error => reject(error) 
       )
   });
 }
