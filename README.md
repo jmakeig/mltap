@@ -11,7 +11,11 @@
 First, install the libraries and the command-line interface, 
 
 ```shell
-npm install -g mltap
+git clone https://github.com/jmakeig/mltap.git && cd mltap
+npm install
+npm run setup
+npm test
+npm install --global . # optional
 ```
 
 This installs the the command-line interface on your `$PATH` and configures MarkLogic with the necessary library modules and security settings. You’ll only need to do this once.

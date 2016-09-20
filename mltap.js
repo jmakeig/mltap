@@ -1,6 +1,6 @@
 'use strict';
 
-const inspect = require('/mltap/lib/object-inspect');
+const inspect = require('/mltap/_modules/object-inspect/index.js');
 
 // const ctx = { modules: 0, root: '/Users/jmakeig/Workspaces/mltap' };
 
