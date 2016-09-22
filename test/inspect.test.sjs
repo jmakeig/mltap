@@ -1,6 +1,6 @@
 'use strict';
 
-const test = require('./is-marklogic') ? require('/mltap/test') : require('tape-catch');
+const test = require('./is-marklogic') ? require('/mltap/test') : require('tape');
 
 test('inspect', (assert) => {
   // All of these are intended to fail

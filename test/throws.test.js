@@ -1,6 +1,6 @@
 'use strict';
 
-const test = require('tape-catch');
+const test = require('tape');
 const remote = require('../marklogic-remote')(/* connection */);
 const parseTAP = require('../lib/tap-helpers').parseTAP;
 

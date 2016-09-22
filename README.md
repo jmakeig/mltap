@@ -41,7 +41,7 @@ mltap test/*.test.sjs | tap-diff
 
 const test = isMarkLogic() ? 
                require('/mltap/test') : 
-               require('tape-catch');
+               require('tape');
 
 test('Throws an error after some assertions pass', (assert) => {
   assert.true(true, 'true is true');
