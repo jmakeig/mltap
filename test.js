@@ -42,7 +42,7 @@ const harness = {
     this.tests.push(newInstance(Test, name, impl));
   },
   run() {
-    for(let test of this.tests) {
+    for(const test of this.tests) {
       try {
         const start = Date.now();
         const results = test.run();
@@ -57,6 +57,7 @@ const harness = {
         throw error;
       }
     }
+    return this;
   },
   *[Symbol.iterator]() {
      yield* this.tests[Symbol.iterator](); 
@@ -76,7 +77,7 @@ function Test(name, impl) {
 }
 Test.prototype = {
   run() {
-    console.log('About to run…');
+    console.log(`About to run ${this.name}…`);
     this.impl(this);
     this.complete();
     return this.report();
@@ -117,7 +118,7 @@ Test.prototype = {
     if(this.isErrored) return;
     if('number' === typeof this.planned) {
       if(this.outcomes.length !== this.planned) {
-        assert(false, 'plan', `Planned for ${this.planned} assertions, got ${this.outcomes.length}`, this.outcomes.length, this.planned);
+        this.assert(false, 'plan', `Planned for ${this.planned} assertions, got ${this.outcomes.length}`, this.outcomes.length, this.planned);
       }
     } else if(!this.isEnded) {
       this.assert(false, 'plan', `Didn’t call end after ${this.outcomes.length} assertions`, this.outcomes.length);
