@@ -33,7 +33,7 @@ if [[ $arg1 = 'release' ]]; then
   fname=$(pwd)/$fname
 
   sudo apt-get update
-  sudo apt-get install wajig alien rpm lsb-base dpkg-dev debhelper build-essential
+  sudo apt-get install wajig alien rpm lsb-base dpkg-dev debhelper build-essential libc6
   (cd /etc && sudo ln -s default sysconfig)
   sudo wajig rpminstall $fname
 
