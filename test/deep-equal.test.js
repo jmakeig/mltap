@@ -15,7 +15,7 @@ test('assert.deepEqual()', (assert) => {
       const failure = tap.failures[0];
       assert.skip(failure.diag.expected, '?'); // Depends on #19
       assert.skip(failure.diag.actual, '?'); // Depends on #19
-      assert.skip(failure.diag.at, '/test/deep-equal.test.sjs:7:10'); // Depends on #20
+      assert.equal(failure.diag.at, 'Test.impl (/mltap/mltap.js:7:10)'); // Depends on #20
       assert.equal(failure.diag.operator, 'deepEqual', 'Operator is deepEqual');
     })
     .catch(error => assert.fail(error));

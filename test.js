@@ -153,7 +153,7 @@ Test.prototype = {
           type: 'fail', 
           actual: actual,
           expected: expected,
-          at: at || StackTrace.get()[2], // Will this actually work?
+          at: at || StackTrace.get()[2],
         })
       );
     }
