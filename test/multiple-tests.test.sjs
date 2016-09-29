@@ -1,6 +1,6 @@
 'use strict';
 
-const test = require('./is-marklogic') ? require('/mltap/test') : require('tape-catch');
+const test = require('/mltap/lib/is-marklogic') ? require('/mltap/test') : require('tape-catch');
 
 test('One', (assert) => {
   assert.plan(1);

@@ -9,6 +9,22 @@ const inspect = require('/mltap/lib/format');
 //   'test/lib.test.sjs',
 // ];
 
+function runner(...args) {
+  if('function' === typeof args[0].run) { // Is harness
+    return asTAP(
+      [  // module
+        {
+          // Since the tests are “accumulated” in the 
+          // harness, you only need to run the last one here.
+          tests: args[args.length - 1].run().results
+        }
+      ]
+    );
+  } else {
+    return remoteRunner(args[0], args[1], args[2]);
+  }
+}
+
 /**
  * Run the tests at the referenced paths and return a TAP string.
  * Must be amped to the mltap-internal role.
@@ -21,7 +37,7 @@ const inspect = require('/mltap/lib/format');
  * @param {Array<string>} tests
  * @returns {string} TAP 13 output
  */
-function runner(tests, root, modules) {
+function remoteRunner(tests, root, modules) {
   xdmp.securityAssert(['http://github.com/jmakeig/mltap/runner'], 'execute');
   const results = [];
   const ctx = {
@@ -91,8 +107,8 @@ function asTAP(results) {
 
   let counter = 0;
   const out = ['TAP version 13'];
-  for(let module of results) {
-    for(let test of module.tests) {
+  for(const module of results) {
+    for(const test of module.tests) {
       out.push(`# ${test.name}`);
       //out.push(`# ${test.duration * 1000}ms`)
       for(const assertion of test.assertions) {
