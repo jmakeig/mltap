@@ -1,0 +1,101 @@
+var tap = require('./lib/tap');
+
+var harness = {
+  items: [],
+  register: function(test) {
+    this.items.push(test);
+    return this;
+  },
+  run: function() {
+    return this.items.map(function(test) {
+      return {
+        name: test.name,
+        assertions: test.run()
+      }
+    });
+  }
+};
+
+// function TestOutcomes(outcomes) {
+//   this.value = outcomes;
+// }
+// TestOutcomes.prototype = {
+//   toJSON: function(indent) {
+//     return JSON.stringify(this.value, null, indent);
+//   },
+//   toTAP: function() {
+//     function byType(type) {
+//       return function(outcome) {
+//         return type === outcome.outcome;
+//       }
+//     }
+//     return this.value.map(function(test) {
+//       return test.test 
+//         + ' ' 
+//         + test.outcomes.filter(byType('pass')).length
+//         + ', ' +
+//         + test.outcomes.filter(byType('fail')).length
+//       ;
+//     })
+//       .join('\n');
+//   }
+// }
+
+/**
+ * Registers zero or more tests and returns the harness itself.
+ * 
+ * @param {Iterable<Test>} tests
+ * @returns harness Singleton instance of the global harness
+ */
+function runner(/* ...tests */) {
+  console.dir(arguments);
+  if('string' === typeof arguments[1]) {
+    return remoteRunner(arguments[0], arguments[1], arguments[2], arguments[3]);
+  } else { 
+    for(var i = 0; i < arguments.length; i++) {
+      harness.register(arguments[i]);
+    }
+    return harness;
+  }
+}
+
+/**
+ * Run the tests at the referenced paths and return a TAP string.
+ * Must be amped to the mltap-internal role.
+ * 
+ * @example
+ * 'use strict';
+ * const mltap = require('/mltap');
+ * mltap(['test/test.test.sjs', 'test/lib.test.sjs',]);
+ * 
+ * @param {Array<string>} tests
+ * @returns {string} TAP 13 output
+ */
+function remoteRunner(tests, root, modules, accept) {
+  console.log(tests, root, modules);
+  xdmp.securityAssert(['http://github.com/jmakeig/mltap/runner'], 'execute');
+  var results = [];
+  var ctx = {
+    root: root,
+    modules: modules || 0,
+    ignoreAmps: false,
+  }
+
+  var transform = function (r) { return r; };
+  if('tap' === accept) {
+    transform = tap;
+  }
+
+  return transform(
+    tests.map(function(test) {
+      console.log('mltap: Running test ' + test + ' from ' + root);
+      var harness = fn.head(xdmp.invoke(test, null, ctx));
+      return {
+        module: test,  
+        tests: harness.run()
+      };
+    })
+  );
+}
+
+module.exports = runner;

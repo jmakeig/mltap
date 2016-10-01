@@ -1,12 +1,13 @@
 'use strict';
 
+const path = require('path');
 const test = require('tape');
 const remote = require('../marklogic-remote')(/* connection */);
 const parseTAP = require('../lib/tap-helpers').parseTAP;
 
 test('inspect', (assert) => {
   assert.plan(11);
-  remote('test/inspect.test.sjs') // CHANGE ME
+  remote('inspect.test.sjs', path.resolve(__dirname, '../../marklogic/test')) // CHANGE ME
     .then((tap) => parseTAP(tap))
     .then(tap => {
       const actual = result => result.diag.actual;

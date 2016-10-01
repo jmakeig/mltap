@@ -1,6 +1,7 @@
 .gradle
 .tmp
 build
+dist
 
 # npm
 node_modules

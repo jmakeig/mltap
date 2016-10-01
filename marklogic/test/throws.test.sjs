@@ -1,23 +1,23 @@
 'use strict';
 
-const test = require('/mltap/lib/is-marklogic') ? require('/mltap/test') : require('tape');
+var test = require('/mltap/test');
 
-test('assert.throws()', (assert) => {
+test('assert.throws()', function(assert) {
   // Pass
   assert.throws(
-    () => { throw new TypeError('Thrown TypeError'); }, 
+    function() { throw new TypeError('Thrown TypeError'); }, 
     TypeError, 
     'Is a TypeError'
   );
   // Pass
   assert.throws(
-    () => { throw new TypeError('Thrown TypeError'); }, 
+    function() { throw new TypeError('Thrown TypeError'); }, 
     Error, 
     'Is an Error'
   );
   // Fail
   assert.throws(
-    () => { throw new TypeError('Thrown TypeError'); }, 
+    function() { throw new TypeError('Thrown TypeError'); }, 
     ReferenceError, 
     'Isn’t a ReferenceError'
   );

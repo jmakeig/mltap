@@ -1,6 +1,7 @@
 'use strict'
 
-const format = require('/mltap/_modules/pretty-format/index');
+require('./polyfill');
+var format = require('/mltap/_modules/pretty-format/index');
 
 /**
  * Left pads a multi-line string, for example to embed it
@@ -14,11 +15,11 @@ const format = require('/mltap/_modules/pretty-format/index');
  * @throws TypeError
  */
 function indent(str, num, fill, hanging) {
-  if('string' !== typeof str) { throw new TypeError(`${format(str)} is not a string`); }
+  if('string' !== typeof str) { throw new TypeError(format(str) + ' is not a string'); }
   if(!num) return str;
-  const pad = (new Array(num)).fill(fill || ' ').join('');
+  var pad = (new Array(num)).fill(fill || ' ').join('');
   return str.split('\n')
-    .map((line, index) => (0 === index && hanging ? '' : pad) + line)
+    .map(function(line, index) { return (0 === index && hanging ? '' : pad) + line; })
     .join('\n');
 }
 
@@ -45,12 +46,12 @@ function prettyFormat(val, opts) {
 
   // Argh. pretty-format rejects unknown options
   // <https://github.com/thejameskyle/pretty-format/issues/37>
-  const pruned = Object.assign({}, opts);
+  var pruned = Object.assign({}, opts);
   delete pruned.pad;
 
-  const formatted = format(val, pruned);
+  var formatted = format(val, pruned);
   if(opts && opts.pad) {
-    let num  = opts.pad.num,
+    var num  = opts.pad.num,
         fill = opts.pad.fill,
         hanging = opts.pad.hanging;
     if('number' === typeof opts.pad) {
