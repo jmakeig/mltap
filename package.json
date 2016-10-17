@@ -7,10 +7,10 @@
     "test": "test"
   },
   "bin": {
-    "mltap": "bin/mltap"
+    "mltap": "node/bin/mltap.js"
   },
   "scripts": {
-    "test": "tape test/*.test.js",
+    "test": "tape node/test/*.test.js",
     "test-pretty": "tape test/*.test.js | tap-notify | tap-diff",
     "test-marklogic": "bin/mltap test/*.test.sjs",
     "test-marklogic-pretty": "bin/mltap test/*.test.sjs | tap-notify | tap-diff",
@@ -36,6 +36,13 @@
   },
   "homepage": "https://github.com/jmakeig/mltap#readme",
   "devDependencies": {
+    "babel-cli": "^6.16.0",
+    "babel-core": "^6.16.0",
+    "babel-plugin-transform-es2015-block-scoping": "^6.15.0",
+    "babel-plugin-transform-es2015-for-of": "^6.8.0",
+    "babel-polyfill": "^6.16.0",
+    "babel-preset-es2015": "^6.16.0",
+    "eslint": "^3.7.1",
     "tap-out": "^1.4.2",
     "tap-parser": "^3.0.3",
     "tape": "^4.6.0"

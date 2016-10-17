@@ -5,8 +5,8 @@ const marklogic = require('marklogic');
 const DEFAULT_CONN = {
   host:     'localhost',  // TODO: Parameterize me
   port:     '8000',       // TODO: Parameterize me
-  user:     'tester',     // TODO: Parameterize me
-  password: 'tester',     // TODO: Parameterize me 
+  user:     'admin',     // TODO: Parameterize me
+  password: 'admin',     // TODO: Parameterize me 
   authType: 'digest',     // TODO: Parameterize me
 }
 let client;  // Defined below in config
@@ -16,7 +16,7 @@ let client;  // Defined below in config
  *   Array<string> tests - The paths to the tests, relative to the root
  *   string root - The root context to resolve module imports. Assumes file system
  */
-const bootstrap = `require('/mltap/mltap')(tests, root, 0);`;
+const bootstrap = `require('/mltap/harness')(tests, root, 0, accept);`;
 
 /**
  * 
@@ -25,8 +25,9 @@ const bootstrap = `require('/mltap/mltap')(tests, root, 0);`;
  * @param {string} root
  * @returns Promise
  */
-function remote(tests, root = process.cwd()) {  
-  return new Promise((resolve,reject) => {
+function remote(tests, root = process.cwd(), accept = 'tap') {  
+  // console.log(tests, root);
+  return new Promise((resolve, reject) => {
     if(!tests) {
       reject('No tests');
     } else if('string' === typeof tests) {
@@ -36,10 +37,15 @@ function remote(tests, root = process.cwd()) {
       {
         tests: tests,
         root: root, 
+        accept: accept,
       })
       .result(
         response => resolve(response[0].value),
-        error => reject(error) 
+        error => {
+          // FIXME: What’s the approriate way to bubble this?
+          // console.error(JSON.stringify(error, null, 2)); 
+          reject(error)
+        } 
       )
   });
 }

@@ -1,8 +1,8 @@
 'use strict';
 
-const test = require('/mltap/lib/is-marklogic') ? require('/mltap/test') : require('tape');
+var test = require('/mltap/test');
 
-test('inspect', (assert) => {
+test('inspect', function(assert) {
   // All of these are intended to fail
   // so we can test the serialization of 
   // various types

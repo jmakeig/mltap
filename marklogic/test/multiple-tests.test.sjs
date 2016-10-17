@@ -1,16 +1,17 @@
 'use strict';
 
-const test = require('/mltap/lib/is-marklogic') ? require('/mltap/test') : require('tape-catch');
+var test = require('/mltap/test');
 
-test('One', (assert) => {
-  assert.plan(1);
+test('One', function(assert) {
+  assert.plan(2);
   assert.true(true, 'Passed assertion from the first test');
+  assert.equal(1, 1);
 });
-test('Two', (assert) => {
+test('Two', function(assert) {
   assert.plan(1);
   assert.true(true, 'Passed assertion from the second test');
 });
-test('Three', (assert) => {
+test('Three', function(assert) {
   assert.plan(1);
   assert.true(!true, 'Failed assertion from the second test');
 });

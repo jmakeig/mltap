@@ -6,23 +6,24 @@ const parseTAP = require('../lib/tap-helpers').parseTAP;
 
 test('inline', (assert) => {
   const module = `'use strict';
-      const mltap = require('/mltap/mltap');
-      const test = require('/mltap/test');
-      mltap(
-        test('One', assert => {
+      var test = require('/mltap/test');
+      var tap = require('/mltap/lib/tap');
+      tap((
+        test('One', function(assert) {
           assert.plan(1);
           assert.equal(null, null, 'null gonna null');
         }),
-        test('Two', assert => {
+        test('Two', function(assert) {
           assert.plan(2);
           assert.true(true, 'Nothing more true than true');
           assert.deepEqual({a: 'A', b: 'B'}, {b: 'B', a: 'A'}, 'Key order');
         }),
-        test('Three', assert => {
+        test('Three', function(assert) {
           assert.equal(2 + 2, 5, 'Two and two is not five');
           assert.end();
         })
-      );`
+      ).run());
+`
   const marklogic = require('marklogic');
 
   const conn = {

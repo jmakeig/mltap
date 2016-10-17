@@ -31,6 +31,7 @@ const conn = {
 const remote = require('../marklogic-remote')(conn);
 
 remote(opts['<test>'], process.cwd())
+  //.then(tap => process.stdout.write(tap + '\n'))
   .then(tap => process.stdout.write(tap + '\n'))
   .catch(error => { 
     // console.dir(error);
