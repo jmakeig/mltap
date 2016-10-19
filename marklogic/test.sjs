@@ -170,7 +170,20 @@ Test.prototype = Object.assign(
    */
   true: function(value, msg) {
     msg = msg || String(value) + ' is true?';
-    this.assert('true', true === value, true, value, msg);
+    this.assert('true', true === value, value, true, msg);
+  },
+
+  /**
+   * Whether the `value` is strictly (`===`) `false`. 
+   * 
+   * @param {any} value     Any value
+   * @param {string} [msg]  A short description
+   * @returns {void}
+   */
+  false: function(value, msg) {
+    msg  = msg || String(value) + ' is false?';
+    // assert: function(operator, ok, actual, expected, msg, at)
+    this.assert('false', false === value, value, false, msg);
   },
   /**
    * Whether `actual` and `expected` are strictly (`===`) equal.
