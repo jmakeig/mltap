@@ -55,6 +55,7 @@
   "dependencies": {
     "deep-equal": "^1.0.1",
     "docopt": "^0.6.2",
+    "getpass": "^0.1.6",
     "marklogic": "^1.0.5",
     "pretty-format": "^4.0.0",
     "stack-trace": "0.0.9"
