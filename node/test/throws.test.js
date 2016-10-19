@@ -18,7 +18,7 @@ test('assert.throws()', (assert) => {
       assert.equal(failure.diag.operator, 'throws', 'Operator is throws');
       assert.deepEqual(failure.diag.expected, '[Function ReferenceError]');
       assert.deepEqual(failure.diag.actual, '[TypeError: Thrown TypeError]');
-      assert.equal(failure.diag.at, '/throws.test.sjs:20:24', 'Failure location');
+      assert.true(String(failure.diag.at).endsWith('/throws.test.sjs:20:24'), 'Failure location');
     })
     .catch(error => assert.fail(error));
 });
