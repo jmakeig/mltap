@@ -98,4 +98,4 @@ function remoteRunner(tests, root, modules, accept) {
   );
 }
 
-module.exports = runner;
+module.exports = module.amp(runner);

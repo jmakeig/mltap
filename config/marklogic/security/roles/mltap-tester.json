@@ -3,9 +3,24 @@
   "description": "Required role for running mltap tests.",
   "privilege": [
     {
-      "action": "http://marklogic.com/xdmp/privileges/xdbc-eval",
+      "action": "http://marklogic.com/xdmp/privileges/xdmp-invoke",
       "kind": "execute",
-      "privilege-name": "xdbc:eval"
+      "privilege-name": "xdmp:invoke"
+    },
+    {
+      "action": "http://marklogic.com/xdmp/privileges/xdmp-invoke-in",
+      "kind": "execute",
+      "privilege-name": "xdmp:invoke-in"
+    },
+    {
+      "action": "http://marklogic.com/xdmp/privileges/xdbc-invoke",
+      "kind": "execute",
+      "privilege-name": "xdbc:invoke"
+    },
+    {
+      "action": "http://marklogic.com/xdmp/privileges/xdbc-invoke-in",
+      "kind": "execute",
+      "privilege-name": "xdbc:invoke-in"
     },
     {
       "action": "http://github.com/jmakeig/mltap/runner",

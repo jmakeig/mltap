@@ -29,8 +29,8 @@ test('inline', (assert) => {
   const conn = {
     host:     'localhost',  // TODO: Parameterize me
     port:     '8000',       // TODO: Parameterize me
-    user:     'tester',     // TODO: Parameterize me
-    password: 'tester',     // TODO: Parameterize me 
+    user:     'admin',      // TODO: Parameterize me
+    password: 'admin',      // TODO: Parameterize me 
     authType: 'digest',     // TODO: Parameterize me
   }
   const client = marklogic.createDatabaseClient(conn);

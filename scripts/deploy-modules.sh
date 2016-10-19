@@ -8,7 +8,7 @@ rm -rf ./dist
 
 MLTAP=./marklogic/dist/es6
 mkdir -p "$MLTAP"
-cp -R ./marklogic/harness.sjs ./marklogic/test.sjs ./marklogic/lib "$MLTAP"
+cp -R ./marklogic/harness.sjs ./marklogic/test.sjs ./marklogic/bootstrap.sjs ./marklogic/lib "$MLTAP"
 
 MODULES="$MLTAP"/_modules
 

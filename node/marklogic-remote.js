@@ -5,18 +5,11 @@ const marklogic = require('marklogic');
 const DEFAULT_CONN = {
   host:     'localhost',  // TODO: Parameterize me
   port:     '8000',       // TODO: Parameterize me
-  user:     'admin',     // TODO: Parameterize me
-  password: 'admin',     // TODO: Parameterize me 
+  user:     'tester',     // TODO: Parameterize me
+  password: 'tester',     // TODO: Parameterize me 
   authType: 'digest',     // TODO: Parameterize me
 }
 let client;  // Defined below in config
-
-/*
- * Assumes external variables:
- *   Array<string> tests - The paths to the tests, relative to the root
- *   string root - The root context to resolve module imports. Assumes file system
- */
-const bootstrap = `require('/mltap/harness')(tests, root, 0, accept);`;
 
 /**
  * 
@@ -33,7 +26,14 @@ function remote(tests, root = process.cwd(), accept = 'tap') {
     } else if('string' === typeof tests) {
       tests = [tests];
     }
-    client.eval(bootstrap, 
+
+    /*
+     * Assumes external variables:
+     *   Array<string> tests - The paths to the tests, relative to the root
+     *   string root - The root context to resolve module imports. Assumes file system
+     *   string accept - The format to return `tap`
+     */
+    client.invoke('/mltap/bootstrap.sjs', 
       {
         tests: tests,
         root: root, 

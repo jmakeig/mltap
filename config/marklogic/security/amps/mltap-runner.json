@@ -1,6 +1,6 @@
 {
   "local-name": "runner",
-  "document-uri": "/mltap/mltap.js",
+  "document-uri": "/mltap/harness.sjs",
   "role": [
     "mltap-internal"
   ]
