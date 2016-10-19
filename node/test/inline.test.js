@@ -72,6 +72,6 @@ test('inline', (assert) => {
       const fail = tap.failures[0].diag;
       assert.true(fail.operator && fail.expected && fail.actual && fail.at, 'Has fail components');
     })
-    .catch(error => assert.fail(error));
+    .catch(assert.end);
        
 });

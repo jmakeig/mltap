@@ -14,5 +14,5 @@ test('mutiple tests', (assert) => {
       assert.equal(tap.pass, 3, '3 tests pass');
       assert.equal(tap.fail, 1, '1 test fails');
     })
-    .catch(error => assert.fail(error));
+    .catch(assert.end);
 });

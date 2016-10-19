@@ -20,10 +20,12 @@ test('assert.deepEqual()', (assert) => {
       const failure = tap.failures[0];
       assert.equal(failure.diag.expected, 'Array []', 'expected Array');
       assert.equal(failure.diag.actual, 'Object {\n  "a": "A",\n}', 'actual Object');
+      assert.comment(failure.diag.at);
       assert.true(failure.diag.at.startsWith('Object.test'), 'at stack frame instance.method'); // Yuck!
+      assert.comment(failure.diag.at);
       assert.true(failure.diag.at.endsWith('/deep-equal.test.sjs:7:10)'), 'at stack frame location')
       assert.equal(failure.diag.operator, 'deepEqual', 'operator is deepEqual');
     })
-    .catch(assert.fail);
+    .catch(assert.end);
 });
 
