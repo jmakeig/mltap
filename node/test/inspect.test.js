@@ -25,5 +25,5 @@ test('inspect', (assert) => {
       assert.deepEqual(actual(results[9]), '[Function asdf]', 'function');
       assert.deepEqual(actual(results[10]), '[Function anonymous]', 'function, anonymous');
     })
-    .catch(error => assert.fail(error));
+    .catch(assert.end);
 });
