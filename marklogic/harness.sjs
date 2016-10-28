@@ -4,6 +4,7 @@ var harness = {
   items: [],
   register: function(test) {
     this.items.push(test);
+    console.debug('mltap:', 'Registering ' + test.name + ': ' + this.items.length);
     return this;
   },
   run: function() {
@@ -48,7 +49,6 @@ var harness = {
  * @returns harness Singleton instance of the global harness
  */
 function runner(/* ...tests */) {
-  console.dir(arguments);
   if('string' === typeof arguments[1]) {
     return remoteRunner(arguments[0], arguments[1], arguments[2], arguments[3]);
   } else { 
@@ -72,8 +72,8 @@ function runner(/* ...tests */) {
  * @returns {string} TAP 13 output
  */
 function remoteRunner(tests, root, modules, accept) {
-  console.log(tests, root, modules);
   xdmp.securityAssert(['http://github.com/jmakeig/mltap/runner'], 'execute');
+  console.debug('mltap:', tests, root, modules);
   var results = [];
   var ctx = {
     root: root,
@@ -88,8 +88,8 @@ function remoteRunner(tests, root, modules, accept) {
 
   return transform(
     tests.map(function(test) {
-      console.log('mltap: Running test ' + test + ' from ' + root);
       var harness = fn.head(xdmp.invoke(test, null, ctx));
+      console.log('mltap:', 'Registering tests ' + test + ' from ' + root);
       return {
         module: test,  
         tests: harness.run()
