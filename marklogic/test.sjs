@@ -218,7 +218,7 @@ Test.prototype.deepEqual = function(actual, expected, msg) {
     deepEqual(actual, expected, { strict: true }), 
     actual, 
     expected,
-    msg
+    msg || String(actual) + ' is deepEqual to ' + String(expected)
   );
 }
 /**

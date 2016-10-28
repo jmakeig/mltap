@@ -9,15 +9,15 @@ test('assert.deepEqual()', (assert) => {
   // console.log(process.cwd());
   //console.log(__dirname);
 
-  assert.plan(8);
+  assert.plan(9);
   remote('deep-equal.test.sjs', path.resolve(__dirname, '../../marklogic/test')) // CHANGE ME
     // .then(assert.comment)
     .then(tap => parseTAP(tap))
     .then(tap => {
-      assert.equal(tap.count, 2, 'count');
+      assert.equal(tap.count, 3, 'count');
       assert.equal(tap.pass, 1, 'pass');
-      assert.equal(tap.fail, 1, 'fail');
-      const failure = tap.failures[0];
+      assert.equal(tap.fail, 2, 'fail');
+      let failure = tap.failures[0];
       assert.equal(failure.diag.expected, 'Array []', 'expected Array');
       assert.equal(failure.diag.actual, 'Object {\n  "a": "A",\n}', 'actual Object');
       assert.comment(failure.diag.at);
@@ -25,6 +25,9 @@ test('assert.deepEqual()', (assert) => {
       assert.comment(failure.diag.at);
       assert.true(failure.diag.at.endsWith('/deep-equal.test.sjs:7:10)'), 'at stack frame location')
       assert.equal(failure.diag.operator, 'deepEqual', 'operator is deepEqual');
+
+      failure = tap.failures[1];
+      assert.equal(failure.name, '[object Object] is deepEqual to'); // FIXME: What should empty strings report as?
     })
     .catch(assert.end);
 });
