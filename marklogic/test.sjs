@@ -193,6 +193,18 @@ Test.prototype.equal = function(actual, expected, msg) {
   this.assert('equal', expected === actual, actual, expected, msg);
 }
 /**
+ * Whether `actual` and `expected` are strictly (`===`) equal.
+ * 
+ * @param {any} actual
+ * @param {any} expected
+ * @param {string} [msg]
+ * @returns {void}
+ */
+Test.prototype.notEqual = function(actual, expected, msg) {
+  msg = msg || String(actual) + ' does not equal ' + String(expected);
+  this.assert('notEqual', expected !== actual, actual, expected, msg);
+}
+/**
  * @param {any} actual
  * @param {any} expected
  * @param {string} [msg]
