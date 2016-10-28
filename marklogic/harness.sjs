@@ -17,31 +17,6 @@ var harness = {
   }
 };
 
-// function TestOutcomes(outcomes) {
-//   this.value = outcomes;
-// }
-// TestOutcomes.prototype = {
-//   toJSON: function(indent) {
-//     return JSON.stringify(this.value, null, indent);
-//   },
-//   toTAP: function() {
-//     function byType(type) {
-//       return function(outcome) {
-//         return type === outcome.outcome;
-//       }
-//     }
-//     return this.value.map(function(test) {
-//       return test.test 
-//         + ' ' 
-//         + test.outcomes.filter(byType('pass')).length
-//         + ', ' +
-//         + test.outcomes.filter(byType('fail')).length
-//       ;
-//     })
-//       .join('\n');
-//   }
-// }
-
 /**
  * Registers zero or more tests and returns the harness itself.
  * 
@@ -81,7 +56,7 @@ function remoteRunner(tests, root, modules, accept) {
     ignoreAmps: false,
   }
 
-  var transform = function (r) { return r; };
+  var transform = function identity(r) { return r; };
   if('tap' === accept) {
     transform = tap;
   }
