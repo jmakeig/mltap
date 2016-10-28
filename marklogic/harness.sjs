@@ -8,12 +8,17 @@ var harness = {
     return this;
   },
   run: function() {
-    return this.items.map(function(test) {
+    var outcomes = this.items.map(function(test) {
       return {
         name: test.name,
         assertions: test.run()
       }
     });
+    this.clear();
+    return outcomes;
+  },
+  clear: function() {
+    this.items = [];
   }
 };
 
@@ -63,8 +68,8 @@ function remoteRunner(tests, root, modules, accept) {
 
   return transform(
     tests.map(function(test) {
-      var harness = fn.head(xdmp.invoke(test, null, ctx));
       console.log('mltap:', 'Registering tests ' + test + ' from ' + root);
+      harness = fn.head(xdmp.invoke(test, null, ctx));
       return {
         module: test,  
         tests: harness.run()
