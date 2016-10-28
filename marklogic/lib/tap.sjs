@@ -45,7 +45,7 @@ function asTAP(results) {
 
   // results = modules[]/tests[]/assertions[]
 
-  var counter = 0;
+  var counter = 0, pass = 0, fail = 0;
   var out = ['TAP version 13'];
 
   // This is for the case where tests are being run inline
@@ -60,9 +60,11 @@ function asTAP(results) {
       test.assertions.forEach(function (assertion) {
         switch (assertion.outcome) {
           case 'pass':
+            pass++;
             out.push('ok ' + ++counter + ' ' + assertion.message);
             break;
           case 'fail':
+            fail++;
             out.push('not ok ' + ++counter + ' ' + assertion.message);
             out.push(indent('---', 2));
             out.push(indent('operator: \'' + String(assertion.operator) + '\'', 4));
@@ -107,6 +109,12 @@ function asTAP(results) {
   });
   out.push('');
   out.push('1..' + counter);
+  out.push('# tests ' + String(counter));
+  out.push('# pass ' + String(pass));
+  out.push('# fail ' + String(fail));
+  out.push('');
+  out.push('# ' + (pass < counter ? 'not ' : '') + 'ok');
+
   return out.join('\n');
 }
 
