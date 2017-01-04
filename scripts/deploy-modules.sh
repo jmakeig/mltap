@@ -24,7 +24,7 @@ mkdir -p "$REMOTE_DIR"
 cp -R "$LOCAL_DIR"/lib "$REMOTE_DIR"
 
 REMOTE_DIR="$MODULES"/pretty-format
-LOCAL_DIR=./node_modules/pretty-format
+LOCAL_DIR=./node_modules/pretty-format/build
 mkdir -p "$REMOTE_DIR"
 cp "$LOCAL_DIR"/index.js "$LOCAL_DIR"/printString.js "$REMOTE_DIR"/
 
@@ -34,11 +34,25 @@ echo "$NVM_BIN"
 echo 'Tranpiling to dist/es5 with babel'
 "$NVM_BIN/node" node_modules/babel-cli/bin/babel.js "$MLTAP" -d ./marklogic/dist/es5
 
-sed -i.BAK -e 's/var symbolToString = Symbol.prototype.toString;/var symbolToString = function() { throw new TypeError("Symbol is not defined."); };/' \
+echo 'Commenting out ansi-styles dependency from pretty-format'
+# Comments out ths ansi-styles dependency
+# This is only used when the `highlight` option is employed
+
+# <http://stackoverflow.com/a/25486705/563324>
+# Unfortunately Linux doesn’t accept and empty string as a parameter to -i, but macOS requires it
+# <http://stackoverflow.com/a/91176/563324>
+sed \
+  -i.BAK \
+  -e 's/var style = require('\''ansi-styles'\'');/\/\/ style = require('\''ansi-styles'\'');/' \
   ./marklogic/dist/es5/_modules/pretty-format/index.js
+# Needed to support MarkLogic 8, not necessary for 9
+sed \
+  -i.BAK \
+  -e 's/var symbolToString = Symbol.prototype.toString;/var symbolToString = function() { throw new TypeError("Symbol is not defined."); };/' \
+  ./marklogic/dist/es5/_modules/pretty-format/index.js
+rm ./marklogic/dist/es5/_modules/pretty-format/index.js.BAK
 
 echo 'Deploying to Modules directory'
-
 
 mkdir -p "$ML_HOME"/Modules/mltap
 # Clear the modules
