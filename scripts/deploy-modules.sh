@@ -4,6 +4,34 @@ set -e
 
 # ML_HOME=~/Library/MarkLogic
 
+ML_HOME="/opt/MarkLogic"
+OS=$(uname)
+case $OS in
+  'Linux')
+    OS='Linux'
+    alias ls='ls --color=auto'
+    ;;
+  'FreeBSD')
+    OS='FreeBSD'
+    alias ls='ls -G'
+    ;;
+  'WindowsNT')
+    OS='Windows'
+    ;;
+  'Darwin') 
+    OS='macOS'
+    ML_HOME=~/Library/MarkLogic
+    ;;
+  'SunOS')
+    OS='Solaris'
+    ;;
+  'AIX') ;;
+  *) ;;
+esac
+
+echo "Detected $OS"
+if [ -z ${ML_HOME+x} ]; then echo 'The environment variable ML_HOME is empty or missing' && exit 1; else echo $ML_HOME; fi
+
 rm -rf ./dist
 
 MLTAP=./marklogic/dist/es6
@@ -31,7 +59,7 @@ cp "$LOCAL_DIR"/index.js "$LOCAL_DIR"/printString.js "$REMOTE_DIR"/
 # <https://github.com/creationix/nvm/issues/43#issuecomment-1486359>
 echo "$NVM_BIN"
 # Travis doesn’t have npm on its PATH
-echo 'Transpiling to dist/es5 with babel'
+echo "Transpiling $MLTAP to dist/es5 with babel"
 "$NVM_BIN/node" node_modules/babel-cli/bin/babel.js "$MLTAP" -d ./marklogic/dist/es5
 
 echo 'Commenting out ansi-styles dependency from pretty-format'
@@ -52,7 +80,7 @@ sed \
   ./marklogic/dist/es5/_modules/pretty-format/index.js
 rm ./marklogic/dist/es5/_modules/pretty-format/index.js.BAK
 
-echo 'Deploying to Modules directory'
+echo "Deploying to $ML_HOME/Modules"
 
 mkdir -p "$ML_HOME"/Modules/mltap
 # Clear the modules

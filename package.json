@@ -16,8 +16,7 @@
     "test-marklogic-pretty": "bin/mltap test/*.test.sjs | tap-notify | tap-diff",
     "config": "gradle mlDeploy",
     "deploy": "./scripts/deploy-modules.sh",
-    "setup": "npm run env && npm run deploy && npm run config",
-    "env": "if [ -z ${ML_HOME+x} ]; then echo 'The environment variable ML_HOME is empty or missing' && exit 1; else echo $ML_HOME; fi"
+    "setup": "npm run deploy && npm run config"
   },
   "repository": {
     "type": "git",
