@@ -31,7 +31,7 @@ cp "$LOCAL_DIR"/index.js "$LOCAL_DIR"/printString.js "$REMOTE_DIR"/
 # <https://github.com/creationix/nvm/issues/43#issuecomment-1486359>
 echo "$NVM_BIN"
 # Travis doesn’t have npm on its PATH
-echo 'Tranpiling to dist/es5 with babel'
+echo 'Transpiling to dist/es5 with babel'
 "$NVM_BIN/node" node_modules/babel-cli/bin/babel.js "$MLTAP" -d ./marklogic/dist/es5
 
 echo 'Commenting out ansi-styles dependency from pretty-format'
