@@ -44,7 +44,7 @@
     "babel-preset-es2015": "^6.16.0",
     "eslint": "^3.7.1",
     "tap-out": "^1.4.2",
-    "tap-parser": "^3.0.3",
+    "tap-parser": "^4.2.4",
     "tape": "^4.6.0"
   },
   "optionalDependencies": {
