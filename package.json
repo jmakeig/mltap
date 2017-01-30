@@ -11,9 +11,9 @@
   },
   "scripts": {
     "test": "tape node/test/*.test.js",
-    "test-pretty": "tape test/*.test.js | tap-notify | tap-diff",
-    "test-marklogic": "bin/mltap test/*.test.sjs",
-    "test-marklogic-pretty": "bin/mltap test/*.test.sjs | tap-notify | tap-diff",
+    "test-pretty": "npm run test | tap-notify | tap-diff",
+    "test-marklogic": "echo 'This will fail becuase of how uncaught exceptions are designed to be handled'; node/bin/mltap.js marklogic/test/*.test.sjs",
+    "test-marklogic-pretty": "npm run test-marklogic | tap-notify | tap-diff",
     "config": "gradle mlDeploy",
     "deploy": "./scripts/deploy-modules.sh",
     "setup": "npm run deploy && npm run config"
