@@ -5,25 +5,30 @@ var test = require('/mltap/test');
 test('assert.throws()', function(assert) {
   // Pass
   assert.throws(
-    function() { throw new TypeError('Thrown TypeError'); }, 
-    TypeError, 
+    function() {
+      throw new TypeError('Thrown TypeError');
+    },
+    TypeError,
     'Is a TypeError'
   );
   // Pass
   assert.throws(
-    function() { throw new TypeError('Thrown TypeError'); }, 
-    Error, 
+    function() {
+      throw new TypeError('Thrown TypeError');
+    },
+    Error,
     'Is an Error'
   );
   // Fail
   assert.throws(
-    function() { throw new TypeError('Thrown TypeError'); }, 
-    ReferenceError, 
+    function() {
+      throw new TypeError('Thrown TypeError');
+    },
+    ReferenceError,
     'Isn’t a ReferenceError'
   );
   assert.end();
 });
-
 /*
 TAP version 13
 # assert.throws()

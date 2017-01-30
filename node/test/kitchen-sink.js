@@ -3,49 +3,53 @@
 const test = require('tape');
 // const parseTAP = require('../lib/tap-helpers').parseTAP;
 
-test('AAAAA. ok', (assert) => {
+test('AAAAA. ok', assert => {
   assert.true(true, 'true is true');
   assert.equal(1, 0 + 1, '1 is 1');
   assert.end();
 });
 
-test('not ok', (assert) => {
+test('not ok', assert => {
   assert.true(!true, 'true is true');
   assert.equal(1, 0 - 1, '1 is not -1');
   assert.end();
 });
 
-test('BBBBBB. implicit fail', (assert) => {
+test('BBBBBB. implicit fail', assert => {
   assert.plan(1);
   assert.true(true, 'true is true');
 });
 
-test('CCCCC. explicit end', (assert) => {
+test('CCCCC. explicit end', assert => {
   try {
-    (function uno() { return (function dos(){ return (function tres(){ throw new Error('Nested error')})() })() })();
-  } catch(error) {
+    (function uno() {
+      return (function dos() {
+        return (function tres() {
+          throw new Error('Nested error');
+        })();
+      })();
+    })();
+  } catch (error) {
     assert.end(error);
   }
 });
 
-test('DDDDD. explicit fail', (assert) => {
+test('DDDDD. explicit fail', assert => {
   assert.plan(1);
   assert.fail('called fail');
 });
 
-test('EEEEE. skip', (assert) => {
+test('EEEEE. skip', assert => {
   assert.deepEqual([1], [1], 'deep equal');
   assert.skip(1, 2, 'skip');
   assert.end();
 });
 
-test('FFFFF. after ended', (assert) => {
+test('FFFFF. after ended', assert => {
   assert.true(true);
   assert.end();
   assert.true(true);
 });
-
-
 /*
 > tape node/test/kitchen-sink.js
 
@@ -109,4 +113,3 @@ ok 9 1 # SKIP
 # pass  5
 # fail  4
 */
-

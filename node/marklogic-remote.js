@@ -3,14 +3,13 @@
 const marklogic = require('marklogic');
 
 const DEFAULT_CONN = {
-  host:     'localhost',  // TODO: Parameterize me
-  port:     '8000',       // TODO: Parameterize me
-  user:     'tester',     // TODO: Parameterize me
-  password: 'tester',     // TODO: Parameterize me 
-  authType: 'digest',     // TODO: Parameterize me
-}
-let client;  // Defined below in config
-
+  host: 'localhost', // TODO: Parameterize me
+  port: '8000', // TODO: Parameterize me
+  user: 'tester', // TODO: Parameterize me
+  password: 'tester', // TODO: Parameterize me 
+  authType: 'digest' // TODO: Parameterize me
+};
+let client; // Defined below in config
 /**
  * 
  * 
@@ -18,12 +17,12 @@ let client;  // Defined below in config
  * @param {string} root
  * @returns Promise
  */
-function remote(tests, root = process.cwd(), accept = 'tap') {  
+function remote(tests, root = process.cwd(), accept = 'tap') {
   // console.log(tests, root);
   return new Promise((resolve, reject) => {
-    if(!tests) {
+    if (!tests) {
       reject('No tests');
-    } else if('string' === typeof tests) {
+    } else if ('string' === typeof tests) {
       tests = [tests];
     }
 
@@ -33,20 +32,17 @@ function remote(tests, root = process.cwd(), accept = 'tap') {
      *   string root - The root context to resolve module imports. Assumes file system
      *   string accept - The format to return `tap`
      */
-    client.invoke('/mltap/bootstrap.sjs', 
-      {
+    client
+      .invoke('/mltap/bootstrap.sjs', {
         tests: tests,
-        root: root, 
-        accept: accept,
+        root: root,
+        accept: accept
       })
-      .result(
-        response => resolve(response[0].value),
-        error => {
-          // FIXME: What’s the approriate way to bubble this?
-          // console.error(JSON.stringify(error, null, 2)); 
-          reject(error)
-        } 
-      )
+      .result(response => resolve(response[0].value), error => {
+        // FIXME: What’s the approriate way to bubble this?
+        // console.error(JSON.stringify(error, null, 2));
+        reject(error);
+      });
   });
 }
 
@@ -57,7 +53,7 @@ function remote(tests, root = process.cwd(), accept = 'tap') {
  * @returns function `remote(tests, root)`
  */
 function config(conn = DEFAULT_CONN) {
-  client = marklogic.createDatabaseClient(conn)
+  client = marklogic.createDatabaseClient(conn);
   return remote;
 }
 

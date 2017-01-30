@@ -12,23 +12,23 @@ var StackTrace = require('/mltap/_modules/stack-trace/lib/stack-trace.js');
  */
 function Test(name, test) {
   this.name = name || 'Test';
-  if('function' !== typeof test) {
-    throw new TypeError((typeof test) + ' is not a function');
+  if ('function' !== typeof test) {
+    throw new TypeError(typeof test + ' is not a function');
   }
   this.test = test;
   this.planned = undefined;
   this.tally = 0;
   this.isEnded = false;
-  
+
   this.assertions = [];
 }
 // <http://www.2ality.com/2011/06/constructor-property.html>
-// Best practice: Avoid replacing the complete prototype value 
-// of a constructor with your own object and only add new properties 
-// to it. Alas, with subclassing, you have no choice and have to 
+// Best practice: Avoid replacing the complete prototype value
+// of a constructor with your own object and only add new properties
+// to it. Alas, with subclassing, you have no choice and have to
 // set the constructor property yourself.
 //
-// It turns out that an instance does not own the constructor property, 
+// It turns out that an instance does not own the constructor property,
 // but inherits it from its prototype:
 //   > function Foo() {}
 //   > var f = new Foo();
@@ -49,7 +49,7 @@ function Test(name, test) {
  * @private
  */
 Test.prototype.assert = function(operator, ok, actual, expected, msg, at) {
-  if(this.isEnded) {
+  if (this.isEnded) {
     // result = {
     //   operator: 'end',
     //   outcome: 'fail',
@@ -58,10 +58,10 @@ Test.prototype.assert = function(operator, ok, actual, expected, msg, at) {
     // throw new Error('Tried to assert ' + operator + ' after end() has been called');
   }
   var outcome = ok;
-  if('boolean' === typeof outcome) {
+  if ('boolean' === typeof outcome) {
     outcome = true === outcome ? 'pass' : 'fail';
   }
-  switch(outcome) {
+  switch (outcome) {
     case 'pass':
     case 'fail':
     case 'skip':
@@ -76,10 +76,10 @@ Test.prototype.assert = function(operator, ok, actual, expected, msg, at) {
     outcome: outcome,
     expected: expected,
     actual: actual,
-    message: msg,
+    message: msg
   };
 
-  if('fail' === outcome) {
+  if ('fail' === outcome) {
     var stack = StackTrace.get();
     /* 
       Object.assign.assert (/mltap/test.sjs:111:30),
@@ -101,30 +101,30 @@ Test.prototype.assert = function(operator, ok, actual, expected, msg, at) {
     result.stack = stack;
     result.at = (at || stack[2]).toString();
   }
-  
+
   this.assertions.push(result);
-  
-  if(this.tally++ === this.planned) {
+
+  if (this.tally++ === this.planned) {
     this.end();
   }
-}
+};
 /**
  * @param {number} num
  * @returns {void}
  * @throws {TypeError}
  */
 Test.prototype.plan = function(num) {
-  if('number' !== typeof num || num < 1) {
+  if ('number' !== typeof num || num < 1) {
     throw new TypeError(num);
   }
   this.planned = num;
-}
+};
 /**
  * @returns {void}
  */
 Test.prototype.end = function() {
   this.isEnded = true;
-}
+};
 /**
  * Runs the actual test, including clean-up to make sure `plan()`/`end()` have 
  * been called.
@@ -133,27 +133,30 @@ Test.prototype.end = function() {
  * @see assert
  */
 Test.prototype.run = function() {
-  // FIXME: I think the following don't work as epxected 
+  // FIXME: I think the following don't work as epxected
   // becuase of the xdmp.invoke boundary
   // console.log(this instanceof Test); // false
   // console.log(this.constructor); // undefined
   // console.log(Object.prototype.toString.call(this));
   this.test(this);
-  if(this.planned) {
-    if(this.planned !== this.tally) {
-      var msg = 'Planned for ' + String(this.planned) + ' assertions, but got ' + String(this.tally);
+  if (this.planned) {
+    if (this.planned !== this.tally) {
+      var msg = 'Planned for ' +
+        String(this.planned) +
+        ' assertions, but got ' +
+        String(this.tally);
       this.assert('plan', false, this.tally, this.planned, msg);
     } else {
       this.end();
     }
   } else {
-    if(!this.isEnded) {
+    if (!this.isEnded) {
       // TODO: Exception instead?
       this.assert('end', this.isEnded, false, 'Never called end()');
     }
   }
   return this.assertions;
-}
+};
 /********** Assertions ***************/
 
 /**
@@ -166,7 +169,7 @@ Test.prototype.run = function() {
 Test.prototype.true = function(value, msg) {
   msg = msg || String(value) + ' is true?';
   this.assert('true', true === value, value, true, msg);
-}
+};
 
 /**
  * Whether the `value` is strictly (`===`) `false`. 
@@ -176,22 +179,24 @@ Test.prototype.true = function(value, msg) {
  * @returns {void}
  */
 Test.prototype.false = function(value, msg) {
-  msg  = msg || String(value) + ' is false?';
+  msg = msg || String(value) + ' is false?';
   // assert: function(operator, ok, actual, expected, msg, at)
   this.assert('false', false === value, value, false, msg);
-},
-/**
+} /**
  * Whether `actual` and `expected` are strictly (`===`) equal.
  * 
  * @param {any} actual
  * @param {any} expected
  * @param {string} [msg]
  * @returns {void}
- */
-Test.prototype.equal = function(actual, expected, msg) {
+ */, Test.prototype.equal = function(
+  actual,
+  expected,
+  msg
+) {
   msg = msg || String(actual) + ' equals ' + String(expected);
   this.assert('equal', expected === actual, actual, expected, msg);
-}
+};
 /**
  * Whether `actual` and `expected` are strictly (`===`) equal.
  * 
@@ -203,7 +208,7 @@ Test.prototype.equal = function(actual, expected, msg) {
 Test.prototype.notEqual = function(actual, expected, msg) {
   msg = msg || String(actual) + ' does not equal ' + String(expected);
   this.assert('notEqual', expected !== actual, actual, expected, msg);
-}
+};
 /**
  * @param {any} actual
  * @param {any} expected
@@ -213,14 +218,14 @@ Test.prototype.notEqual = function(actual, expected, msg) {
 Test.prototype.deepEqual = function(actual, expected, msg) {
   var deepEqual = require('/mltap/_modules/deep-equal/index.js');
   //assert(operator, ok, actual, expected, msg) {
-  this.assert( 
+  this.assert(
     'deepEqual',
-    deepEqual(actual, expected, { strict: true }), 
-    actual, 
+    deepEqual(actual, expected, { strict: true }),
+    actual,
     expected,
     msg || String(actual) + ' is deepEqual to ' + String(expected)
   );
-}
+};
 /**
  * @param {function} fn
  * @param {Error|string|RegExp} expected
@@ -233,7 +238,7 @@ Test.prototype.throws = function(fn, expected, msg) {
   try {
     fn();
   } catch (error) {
-    if(error instanceof expected) {
+    if (error instanceof expected) {
       // assert(operator, ok, actual, expected, msg, at) {
       this.assert('throws', true, error, expected, msg);
       return;
@@ -243,17 +248,20 @@ Test.prototype.throws = function(fn, expected, msg) {
   }
   var frame = StackTrace.parse(actual)[0];
   // function(operator, ok, actual, expected, msg, at) {
-  this.assert('throws', false,  
-    actual, expected,
-    msg 
+  this.assert(
+    'throws',
+    false,
+    actual,
+    expected,
+    msg
     // StackTrace.parse(actual).map(function(frame) { return frame.toString(); }).join('/n')
   );
-}
+};
 /**
  * @param {string} [msg]
  * @returns {void}
  */
-Test.prototype.skip = function(msg) {}
+Test.prototype.skip = function(msg) {};
 // }
 // ); // Object.assign(Test.prototype, {…})
 
@@ -273,9 +281,7 @@ var runner = require('./harness');
  * @returns harness
  */
 function test(name, impl) {
-  return runner(
-    new Test(name, impl)
-  );
+  return runner(new Test(name, impl));
 }
 
 module.exports = test;

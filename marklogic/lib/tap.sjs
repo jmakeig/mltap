@@ -50,14 +50,14 @@ function asTAP(results) {
 
   // This is for the case where tests are being run inline
   // and don’t specify a module.
-  if(results[0] && !('module' in results[0])) {
+  if (results[0] && !('module' in results[0])) {
     results = [{ module: '[inline]', tests: results }];
   }
-  results.forEach(function (module) {
-    module.tests.forEach(function (test) {
+  results.forEach(function(module) {
+    module.tests.forEach(function(test) {
       out.push('# ' + test.name);
       //out.push(`# ${test.duration * 1000}ms`)
-      test.assertions.forEach(function (assertion) {
+      test.assertions.forEach(function(assertion) {
         switch (assertion.outcome) {
           case 'pass':
             pass++;
@@ -67,17 +67,19 @@ function asTAP(results) {
             fail++;
             out.push('not ok ' + ++counter + ' ' + assertion.message);
             out.push(indent('---', 2));
-            out.push(indent('operator: \'' + String(assertion.operator) + '\'', 4));
+            out.push(
+              indent("operator: '" + String(assertion.operator) + "'", 4)
+            );
             out.push(indent('expected: |-\n' + yaml(assertion.expected, 4), 4));
             out.push(indent('actual: |-\n' + yaml(assertion.actual, 4), 4));
             out.push(indent('at: ' + assertion.at.toString(), 4));
             // FIXME: Failures should have stacktraces!
             if (assertion.stack) {
-            //   var frame = assertion.actual.stack[0];
-            //   out.push(indent('at: "' + frame.getFunctionName() + ' (' + frame.getFileName() + ':' + frame.getLineNumber() + ':' + frame.getColumnNumber() + ')"', 4));
+              //   var frame = assertion.actual.stack[0];
+              //   out.push(indent('at: "' + frame.getFunctionName() + ' (' + frame.getFileName() + ':' + frame.getLineNumber() + ':' + frame.getColumnNumber() + ')"', 4));
               out.push(indent('stack: |-', 4)); // YAML: Use |- to strip final line break in a multi-line value
-            //   out.push(indent('Error: ' + assertion.message, 6));
-              assertion.stack.forEach(function(frame){
+              //   out.push(indent('Error: ' + assertion.message, 6));
+              assertion.stack.forEach(function(frame) {
                 // out.push(indent('at ' + f.getFunctionName() + ' (' + f.getFileName() + ':' + f.getLineNumber() + ':' + f.getColumnNumber() + ')', 10));
                 out.push(indent(frame.toString(), 8));
               });
@@ -102,7 +104,9 @@ function asTAP(results) {
           //   out.push(indent('...', 2));
           //   break;
           default:
-            throw new Error(assertion.outcome + ' is not a valid assertion type');
+            throw new Error(
+              assertion.outcome + ' is not a valid assertion type'
+            );
         }
       });
     });

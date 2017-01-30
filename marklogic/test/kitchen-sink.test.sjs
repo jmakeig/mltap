@@ -21,8 +21,14 @@ test('BBBBBB. implicit fail', function(assert) {
 
 test('CCCCC. explicit end', function(assert) {
   try {
-    (function uno() { return (function dos(){ return (function tres(){ throw new Error('Nested error')})() })() })();
-  } catch(error) {
+    (function uno() {
+      return (function dos() {
+        return (function tres() {
+          throw new Error('Nested error');
+        })();
+      })();
+    })();
+  } catch (error) {
     assert.end(error);
   }
 });

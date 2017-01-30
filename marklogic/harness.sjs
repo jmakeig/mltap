@@ -4,7 +4,10 @@ var harness = {
   items: [],
   register: function(test) {
     this.items.push(test);
-    console.debug('mltap:', 'Registering ' + test.name + ': ' + this.items.length);
+    console.debug(
+      'mltap:',
+      'Registering ' + test.name + ': ' + this.items.length
+    );
     return this;
   },
   run: function() {
@@ -12,7 +15,7 @@ var harness = {
       return {
         name: test.name,
         assertions: test.run()
-      }
+      };
     });
     this.clear();
     return outcomes;
@@ -28,11 +31,11 @@ var harness = {
  * @param {Iterable<Test>} tests
  * @returns harness Singleton instance of the global harness
  */
-function runner(/* ...tests */) {
-  if('string' === typeof arguments[1]) {
+function runner /* ...tests */() {
+  if ('string' === typeof arguments[1]) {
     return remoteRunner(arguments[0], arguments[1], arguments[2], arguments[3]);
-  } else { 
-    for(var i = 0; i < arguments.length; i++) {
+  } else {
+    for (var i = 0; i < arguments.length; i++) {
       harness.register(arguments[i]);
     }
     return harness;
@@ -58,11 +61,13 @@ function remoteRunner(tests, root, modules, accept) {
   var ctx = {
     root: root,
     modules: modules || 0,
-    ignoreAmps: false,
-  }
+    ignoreAmps: false
+  };
 
-  var transform = function identity(r) { return r; };
-  if('tap' === accept) {
+  var transform = function identity(r) {
+    return r;
+  };
+  if ('tap' === accept) {
     transform = tap;
   }
 
@@ -71,7 +76,7 @@ function remoteRunner(tests, root, modules, accept) {
       console.log('mltap:', 'Registering tests ' + test + ' from ' + root);
       harness = fn.head(xdmp.invoke(test, null, ctx));
       return {
-        module: test,  
+        module: test,
         tests: harness.run()
       };
     })

@@ -4,13 +4,17 @@ var test = require('/mltap/test');
 
 test('inspect', function(assert) {
   // All of these are intended to fail
-  // so we can test the serialization of 
+  // so we can test the serialization of
   // various types
   assert.equal('string', null, 'string');
-  assert.equal('Here is a string with spaces and \n line \n breaks', null, 'string with line breaks');
+  assert.equal(
+    'Here is a string with spaces and \n line \n breaks',
+    null,
+    'string with line breaks'
+  );
   assert.equal(1000, null, 'number');
   assert.equal(true, null, 'boolean');
-  assert.equal({a: 'A', b: 'B'}, null, 'object');
+  assert.equal({ a: 'A', b: 'B' }, null, 'object');
   assert.equal(/\d+/g, null, 'regexp');
   assert.equal([1, 2, 3, 4, 5, 6, 7, 8, 9], null, 'array');
   assert.equal(null, 14, 'null');
@@ -19,14 +23,12 @@ test('inspect', function(assert) {
   assert.equal(function() {}, null, 'function, anonymous');
   try {
     throw new ReferenceError('asdf');
-  } catch(err) {
+  } catch (err) {
     assert.equal(err, null, 'Error');
   }
   assert.end();
 });
-
-
-// MarkLogic 
+// MarkLogic
 /*
 TAP version 13
 # inspect
@@ -103,7 +105,6 @@ not ok 10 Error
 
 1..10
 */
-
 // Node
 /*
 TAP version 13
