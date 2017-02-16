@@ -41,9 +41,7 @@ function prepareConnection(opts) {
     port: parseInt(opts['--port'], 10) || process.env['MLTAP_PORT'] || 8000,
     user: opts['--user'] || process.env['MLTAP_USER'] || 'tester',
     password: opts['--password'] || process.env['MLTAP_PASSWORD'] || 'tester',
-    database: (
-      opts['--database'] || process.env['MLTAP_DATABASE'] || 'Documents'
-    ),
+    database: opts['--database'] || process.env['MLTAP_DATABASE'] || 'Documents',
     authType: 'digest' // TODO: Parameterize me
   };
   return new Promise((resolve, reject) => {

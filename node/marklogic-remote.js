@@ -6,7 +6,7 @@ const DEFAULT_CONN = {
   host: 'localhost', // TODO: Parameterize me
   port: '8000', // TODO: Parameterize me
   user: 'tester', // TODO: Parameterize me
-  password: 'tester', // TODO: Parameterize me 
+  password: 'tester', // TODO: Parameterize me
   authType: 'digest' // TODO: Parameterize me
 };
 let client; // Defined below in config
