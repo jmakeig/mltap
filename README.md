@@ -118,3 +118,40 @@ Install Node.js TypeScript types to enable code completion,
 npm install -g typings
 typings install dt~node --global
 ```
+
+Set up a [task](https://code.visualstudio.com/docs/editor/tasks) to run tests via npm. The most important part is that the **command return the TAP output unaldulterated**, i.e. not reformatted or rewritten, as most console pretty printers will do. Anything that you pipe the TAP output into, such as [tap-notify](https://www.npmjs.com/package/tap-notify), must be a transparent pass-through. The `problemMatcher` below relies on the specific error reporting format of `mltap`, which isn’s wholly standardized in TAP.
+
+```javascript
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "0.1.0",
+  "command": "npm",
+  "isShellCommand": true,
+  "showOutput": "silent",
+  "suppressTaskName": true,
+  "tasks": [
+    {
+      "taskName": "test",
+      "args": [
+        "run",
+        "test"
+      ],
+      "problemMatcher": {
+        "owner": "javascript",
+        "fileLocation": [
+          "relative",
+          "${workspaceRoot}"
+        ],
+        "pattern": {
+          "regexp": "^\\s+at: (.+) \\((.+):(\\d+):(\\d+)\\)",
+          "file": 2,
+          "line": 3,
+          "column": 4,
+          "message": 1
+        }
+      }
+    }
+  ]
+}
+```
