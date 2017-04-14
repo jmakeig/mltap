@@ -1,6 +1,6 @@
 {
   "name": "mltap",
-  "version": "0.0.1",
+  "version": "0.2.0",
   "description": "TAP producer and test runner for MarkLogic",
   "main": "runner.js",
   "directories": {
@@ -11,14 +11,18 @@
   },
   "scripts": {
     "test": "tape node/test/*.test.js",
-    "test-pretty": "npm run test | tap-notify | tap-diff",
+    "test-pretty": "npm run test | tap-notify",
     "test-marklogic": "echo 'This will fail becuase of how uncaught exceptions are designed to be handled'; node/bin/mltap.js marklogic/test/*.test.sjs",
     "test-marklogic-pretty": "npm run test-marklogic | tap-notify | tap-diff",
     "config": "gradle mlDeploy",
+    "build": "./scripts/build-modules.sh",
+    "predeploy": "npm run build",
     "deploy": "./scripts/deploy-modules.sh",
     "setup": "npm run deploy && npm run config",
     "prettier": "git diff-index --quiet HEAD -- && prettier --single-quote=true --write './node/**/*.*js' './marklogic/**/*.*js'",
-    "lint": "eslint  \"**/*.*.js\" -c .eslintrc.js"
+    "lint": "eslint  \"**/*.*.js\" -c .eslintrc.js",
+    "prepublish": "npm run deploy && npm run test",
+    "install": "npm run deploy"
   },
   "repository": {
     "type": "git",

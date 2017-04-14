@@ -17,8 +17,9 @@ install:
   - pwd
   - nvm install $NODE_VERSION
   - ./scripts/install-dependencies.sh
-  - npm install
+  - npm install  --ignore-scripts
 # TRAVIS_BUILD_DIR=/home/travis/build/jmakeig/mltap
+  - ./scripts/build-modules.sh
   - sudo ./scripts/deploy-modules.sh
   - npm run config
 script:

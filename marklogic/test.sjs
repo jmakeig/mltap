@@ -246,7 +246,6 @@ Test.prototype.throws = function(fn, expected, msg) {
       actual = error;
     }
   }
-  var frame = StackTrace.parse(actual)[0];
   // function(operator, ok, actual, expected, msg, at) {
   this.assert(
     'throws',
