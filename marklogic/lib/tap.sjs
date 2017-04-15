@@ -26,8 +26,8 @@ function asTAP(results) {
     var opts = {
       pad: {
         num: inheritedIndent + 4,
-        hanging: false
-      }
+        hanging: false,
+      },
     };
     return inspect(value, opts);
   }
@@ -55,60 +55,66 @@ function asTAP(results) {
   }
   results.forEach(function(module) {
     module.tests.forEach(function(test) {
-      out.push('# ' + test.name);
-      //out.push(`# ${test.duration * 1000}ms`)
-      test.assertions.forEach(function(assertion) {
-        switch (assertion.outcome) {
-          case 'pass':
-            pass++;
-            out.push('ok ' + ++counter + ' ' + assertion.message);
-            break;
-          case 'fail':
-            fail++;
-            out.push('not ok ' + ++counter + ' ' + assertion.message);
-            out.push(indent('---', 2));
-            out.push(
-              indent("operator: '" + String(assertion.operator) + "'", 4)
-            );
-            out.push(indent('expected: |-\n' + yaml(assertion.expected, 4), 4));
-            out.push(indent('actual: |-\n' + yaml(assertion.actual, 4), 4));
-            out.push(indent('at: ' + assertion.at.toString(), 4));
-            // FIXME: Failures should have stacktraces!
-            if (assertion.stack) {
-              //   var frame = assertion.actual.stack[0];
-              //   out.push(indent('at: "' + frame.getFunctionName() + ' (' + frame.getFileName() + ':' + frame.getLineNumber() + ':' + frame.getColumnNumber() + ')"', 4));
-              out.push(indent('stack: |-', 4)); // YAML: Use |- to strip final line break in a multi-line value
-              //   out.push(indent('Error: ' + assertion.message, 6));
-              assertion.stack.forEach(function(frame) {
-                // out.push(indent('at ' + f.getFunctionName() + ' (' + f.getFileName() + ':' + f.getLineNumber() + ':' + f.getColumnNumber() + ')', 10));
-                out.push(indent(frame.toString(), 8));
-              });
-            }
-            out.push(indent('...', 2));
-            break;
-          // case 'error':
-          //   out.push('not ok ' + ++counter + ' Error: ' + assertion.message);
-          //   // <https://github.com/substack/tape/blob/master/lib/results.js#L139-L166>
-          //   out.push(indent('---', 2));
-          //   out.push(indent('operator: ' + assertion.operator, 4));
-          //   out.push(indent('actual: |-\n' + yaml(assertion.actual, 4), 4));
-          //   if (assertion.stack) {
-          //     var frame = assertion.stack[0];
-          //     out.push(indent('at: "' + frame.getFunctionName() + ' (' + frame.getFileName() + ':' + frame.getLineNumber() + ':' + frame.getColumnNumber() + ')"', 4));
-          //     out.push(indent('stack: |-', 4)); // YAML: Use |- to strip final line break in a multi-line value
-          //     out.push(indent('Error: ' + assertion.message, 6));
-          //     assertion.stack.forEach(function(f){
-          //       out.push(indent('at ' + f.getFunctionName() + ' (' + f.getFileName() + ':' + f.getLineNumber() + ':' + f.getColumnNumber() + ')', 10));
-          //     });
-          //   }
-          //   out.push(indent('...', 2));
-          //   break;
-          default:
-            throw new Error(
-              assertion.outcome + ' is not a valid assertion type'
-            );
-        }
-      });
+      if (test.assertions.skipped) {
+        out.push('# SKIP ' + test.name);
+      } else {
+        out.push('# ' + test.name);
+        //out.push(`# ${test.duration * 1000}ms`)
+        test.assertions.forEach(function(assertion) {
+          switch (assertion.outcome) {
+            case 'pass':
+              pass++;
+              out.push('ok ' + ++counter + ' ' + assertion.message);
+              break;
+            case 'fail':
+              fail++;
+              out.push('not ok ' + ++counter + ' ' + assertion.message);
+              out.push(indent('---', 2));
+              out.push(
+                indent("operator: '" + String(assertion.operator) + "'", 4)
+              );
+              out.push(
+                indent('expected: |-\n' + yaml(assertion.expected, 4), 4)
+              );
+              out.push(indent('actual: |-\n' + yaml(assertion.actual, 4), 4));
+              out.push(indent('at: ' + assertion.at.toString(), 4));
+              // FIXME: Failures should have stacktraces!
+              if (assertion.stack) {
+                //   var frame = assertion.actual.stack[0];
+                //   out.push(indent('at: "' + frame.getFunctionName() + ' (' + frame.getFileName() + ':' + frame.getLineNumber() + ':' + frame.getColumnNumber() + ')"', 4));
+                out.push(indent('stack: |-', 4)); // YAML: Use |- to strip final line break in a multi-line value
+                //   out.push(indent('Error: ' + assertion.message, 6));
+                assertion.stack.forEach(function(frame) {
+                  // out.push(indent('at ' + f.getFunctionName() + ' (' + f.getFileName() + ':' + f.getLineNumber() + ':' + f.getColumnNumber() + ')', 10));
+                  out.push(indent(frame.toString(), 8));
+                });
+              }
+              out.push(indent('...', 2));
+              break;
+            // case 'error':
+            //   out.push('not ok ' + ++counter + ' Error: ' + assertion.message);
+            //   // <https://github.com/substack/tape/blob/master/lib/results.js#L139-L166>
+            //   out.push(indent('---', 2));
+            //   out.push(indent('operator: ' + assertion.operator, 4));
+            //   out.push(indent('actual: |-\n' + yaml(assertion.actual, 4), 4));
+            //   if (assertion.stack) {
+            //     var frame = assertion.stack[0];
+            //     out.push(indent('at: "' + frame.getFunctionName() + ' (' + frame.getFileName() + ':' + frame.getLineNumber() + ':' + frame.getColumnNumber() + ')"', 4));
+            //     out.push(indent('stack: |-', 4)); // YAML: Use |- to strip final line break in a multi-line value
+            //     out.push(indent('Error: ' + assertion.message, 6));
+            //     assertion.stack.forEach(function(f){
+            //       out.push(indent('at ' + f.getFunctionName() + ' (' + f.getFileName() + ':' + f.getLineNumber() + ':' + f.getColumnNumber() + ')', 10));
+            //     });
+            //   }
+            //   out.push(indent('...', 2));
+            //   break;
+            default:
+              throw new Error(
+                assertion.outcome + ' is not a valid assertion type'
+              );
+          }
+        });
+      }
     });
   });
   out.push('');

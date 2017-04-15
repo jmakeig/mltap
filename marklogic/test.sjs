@@ -5,17 +5,17 @@ var StackTrace = require('/mltap/_modules/stack-trace/lib/stack-trace.js');
 /**
  * 
  * 
- * @param {any} name
- * @param {any} test
+ * @param {string} name
+ * @param {Object} [opts]
+ * @param {Function} [test]
  * @returns {Test}
  * @constructor
  */
-function Test(name, test) {
+function Test(name, opts, test) {
   this.name = name || 'Test';
-  if ('function' !== typeof test) {
-    throw new TypeError(typeof test + ' is not a function');
-  }
   this.test = test;
+  this.options = opts;
+  this.skip = this.options.skip;
   this.planned = undefined;
   this.tally = 0;
   this.isEnded = false;
@@ -76,7 +76,7 @@ Test.prototype.assert = function(operator, ok, actual, expected, msg, at) {
     outcome: outcome,
     expected: expected,
     actual: actual,
-    message: msg
+    message: msg,
   };
 
   if ('fail' === outcome) {
@@ -138,6 +138,11 @@ Test.prototype.run = function() {
   // console.log(this instanceof Test); // false
   // console.log(this.constructor); // undefined
   // console.log(Object.prototype.toString.call(this));
+
+  if (this.skip) {
+    return { skipped: true };
+  }
+
   this.test(this);
   if (this.planned) {
     if (this.planned !== this.tally) {
@@ -182,18 +187,16 @@ Test.prototype.false = function(value, msg) {
   msg = msg || String(value) + ' is false?';
   // assert: function(operator, ok, actual, expected, msg, at)
   this.assert('false', false === value, value, false, msg);
-} /**
+};
+/**
  * Whether `actual` and `expected` are strictly (`===`) equal.
  * 
  * @param {any} actual
  * @param {any} expected
  * @param {string} [msg]
  * @returns {void}
- */, Test.prototype.equal = function(
-  actual,
-  expected,
-  msg
-) {
+ */
+Test.prototype.equal = function(actual, expected, msg) {
   msg = msg || String(actual) + ' equals ' + String(expected);
   this.assert('equal', expected === actual, actual, expected, msg);
 };
@@ -276,11 +279,21 @@ var runner = require('./harness');
  *   .run().value;
  * 
  * @param {string} name          A short name describing the nature of the test
+ * @param {Object} opts          A dictionary of options. Only `skip` as a `boolean` is supported today. 
  * @param {function(Test)} impl  The implementation of the test
  * @returns harness
  */
-function test(name, impl) {
-  return runner(new Test(name, impl));
+function test(name, opts, impl) {
+  if ('function' === typeof opts) {
+    return runner(new Test(name, {}, opts));
+  } else if ('object' === typeof opts && 'function' === typeof impl) {
+    return runner(new Test(name, opts, impl));
+  } else {
+    throw new TypeError(
+      //'Test(string, function) or Test(string, object, function)'
+      typeof opts + ' ' + typeof test
+    );
+  }
 }
 
 module.exports = test;
