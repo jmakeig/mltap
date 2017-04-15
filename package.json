@@ -21,7 +21,7 @@
     "setup": "npm run deploy && npm run config",
     "prettier": "git diff-index --quiet HEAD -- && prettier --single-quote=true --write './node/**/*.*js' './marklogic/**/*.*js'",
     "lint": "eslint \"marklogic/**/*.*.js\" && eslint \"node/**/*.*.js\"",
-    "watch": "find marklogic/* | grep -v marklogic/test | grep -v marklogic/dist | entr npm run deploy",
+    "watch": "find marklogic/* | grep -v marklogic/test/ | grep -v marklogic/dist | entr npm run deploy",
     "prepublish": "npm run deploy && npm run test",
     "install": "npm run deploy"
   },
