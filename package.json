@@ -21,6 +21,7 @@
     "setup": "npm run deploy && npm run config",
     "prettier": "git diff-index --quiet HEAD -- && prettier --single-quote=true --write './node/**/*.*js' './marklogic/**/*.*js'",
     "lint": "eslint  \"**/*.*.js\" -c .eslintrc.js",
+    "watch": "find marklogic/* | grep -v marklogic/test | grep -v marklogic/dist | entr clear && npm run deploy",
     "prepublish": "npm run deploy && npm run test",
     "install": "npm run deploy"
   },
@@ -48,10 +49,10 @@
     "babel-polyfill": "^6.23.0",
     "babel-preset-es2015": "^6.16.0",
     "eslint": "^3.18.0",
-    "prettier": "^0.22.0",
+    "prettier": "^1.1.0",
     "tap-out": "^1.4.2",
     "tap-parser": "^5.3.3",
-    "tape": "^4.6.0"
+    "tape": "^4.6.3"
   },
   "optionalDependencies": {
     "faucet": "0.0.1",
