@@ -1,6 +1,6 @@
 {
   "name": "mltap",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "TAP producer and test runner for MarkLogic",
   "main": "runner.js",
   "directories": {
